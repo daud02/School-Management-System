@@ -1,137 +1,87 @@
-# 🏫 School Management System (Laravel)
+# School Management System
 
-A comprehensive School Management System built using **Laravel**, designed to streamline academic and administrative processes for schools. It provides distinct dashboards for **Admins**, **Teachers**, **Students**, and **Parents**.
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue.svg)](https://php.net)
 
----
+A school management system built with Laravel for managing students, classes, attendance, and academic records.
 
-## 🚀 Features
+## Features
 
-### 🔐 Admin Panel
+-   **Admin Panel**: Manage students, classes, marks, and attendance
+-   **Student Portal**: View class routine, marks, and attendance history
+-   **Dashboard**: Real-time statistics and analytics
+-   **Demo Data**: 120 sample students across 6 classes
 
--   Manage user accounts (Teacher, Student, Parent)
--   Manage classes and subjects
--   Manage class routines
--   Manage exams and grades
--   Manage exam marks and send them via SMS
--   Manage student attendance
--   Accounting management (income & expenses)
--   School event management
--   Manage library, dormitory, and transport
--   Messaging between users
--   Configure system settings (general, SMS, language)
+## Tech Stack
 
----
+-   Laravel 11.x
+-   PHP 8.2+
+-   Bootstrap 5
+-   MySQL Database
 
-### 👨‍🏫 Teacher Panel
+## Installation
 
--   Manage students and their exam marks
--   Provide study materials/files to students
--   Manage student attendance
+```bash
+# Clone the repository
+git clone https://github.com/niloy2107028/School-Management-System.git
+cd School-Management-System
 
----
+# Install dependencies
+composer install
+npm install && npm run build
 
-### 👨‍🎓 Student Panel
+# Setup environment
+cp .env.example .env
+php artisan key:generate
 
--   View class routine
--   View exam marks
--   Check attendance status
--   Download study materials from teachers
--   View payment invoices and pay online
--   Communicate with teachers
+# Configure database in .env file
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=school_management
+# DB_USERNAME=root
+# DB_PASSWORD=your_password
 
----
+# Setup database
+php artisan migrate
+php artisan db:seed
 
-### 👨‍👩‍👧‍👦 Parent Panel
+# Start server
+php artisan serve
+```
 
--   View children's exam marks
--   View children's payment invoices
--   View children's class routines
--   Message with teachers
+Visit `http://localhost:8000`
 
----
+## Project Structure
 
-## 🛠️ Tech Stack
+```
+├── app/Http/Controllers/    # Admin & Student controllers
+├── resources/views/         # Blade templates
+├── routes/web.php          # Application routes
+└── database/               # Migrations & seeders
+```
 
--   **Backend**: Laravel (PHP Framework)
--   **Frontend**: Blade Templates / HTML / CSS / JS
--   **Database**: MySQL
--   **Others**: SMS Gateway Integration, Authentication, Role-based access control
+## Routes
 
----
+**Admin**: `/admin/dashboard`, `/admin/students`, `/admin/classes`, `/admin/marks`, `/admin/attendance`
 
-## 📦 Installation
+**Student**: `/student/dashboard`, `/student/routine`, `/student/marks`, `/student/attendance`
 
-1. **Clone the repository**
+## Requirements
 
-    ```bash
-    git clone https://github.com/niloy2107028/School-Management-System.git
-    cd school-management-system
-    ```
+-   PHP 8.2+
+-   Composer
+-   Node.js & npm
+-   MySQL 5.7+
 
-2. **Install dependencies**
+## Contact
 
-    ```bash
-    composer install
-    npm install && npm run dev
-    ```
+**Niloy**  
+Email: niloy2107028@stud.kuet.ac.bd  
+GitHub: [@niloy2107028](https://github.com/niloy2107028)
 
-3. **Create `.env` file**
+**Rokib**  
+Email: islam2107008@stud.kuet.ac.bd
 
-    ```bash
-    cp .env.example .env
-    ```
-
-4. **Configure environment**
-
-    - Set your database, mail, and SMS gateway details in the `.env` file
-
-5. **Generate application key**
-
-    ```bash
-    php artisan key:generate
-    ```
-
-6. **Run migrations**
-
-    ```bash
-    php artisan migrate --seed
-    ```
-
-7. **Serve the application**
-    ```bash
-    php artisan serve
-    ```
-
----
-
-## 👤 User Roles
-
-| Role    | Email                                           | Password | Description              |
-| ------- | ----------------------------------------------- | -------- | ------------------------ |
-| Admin   | [admin@school.com](mailto:admin@school.com)     | password | Full control             |
-| Teacher | [teacher@school.com](mailto:teacher@school.com) | password | Academic management      |
-| Student | [student@school.com](mailto:student@school.com) | password | Access learning features |
-| Parent  | [parent@school.com](mailto:parent@school.com)   | password | Monitor child's progress |
-
-> You can change default users in the database or during seeding.
-
----
-
-## 📧 Contact
-
-For any queries, suggestions, or contributions, please reach out to:
-
-**Your Name**
-📧 [niloy2107028@stud.kuet.ac.bd](mailto:your.email@example.com)
-
----
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-## 🙌 Contributions
-
-Feel free to fork the repository, raise issues, and submit pull requests to improve the system.
+**Daud**  
+Email: mdsharif.abudaud@gmail.com
