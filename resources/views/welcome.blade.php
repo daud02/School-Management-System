@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Management System</title>
+    <title>I.E.T Government High School Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -116,12 +116,12 @@
 <body>
     <div class="container px-3">
         <div class="hero-section">
+            <img src="{{ asset('images/logo.jpg') }}" alt="School Logo" class="mb-3" style="width: 120px; height: 120px; object-fit: contain; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 4px solid #f0f0f0; background: white; padding: 10px;">
             <h1 class="hero-title">
-                <i class="fas fa-graduation-cap"></i>
-                School Management System
+                I.E.T Government High School
             </h1>
             <p class="hero-subtitle">
-                Simple and efficient school administration platform
+                Management System - Simple and efficient school administration platform
             </p>
         </div>
 
