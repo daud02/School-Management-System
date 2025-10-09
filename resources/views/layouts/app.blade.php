@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - School Management System</title>
+    <title>@yield('title') - I.E.T Government High School Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -321,12 +321,11 @@
             <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
                 <div class="position-sticky pt-3">
                     <div class="mb-4 text-center">
-                        <h4 class="text-white" style="font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">
-                            <i class="fas fa-graduation-cap"></i>
-                            SMS
-                        </h4>
-                        <small class="text-white" style="font-weight: 600; opacity: 0.95;">School Management
-                            System</small>
+                        <img src="{{ asset('images/logo.jpg') }}" alt="School Logo" class="mb-3" style="width: 90px; height: 90px; object-fit: contain; border-radius: 15px; background: white; padding: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                        <h5 class="text-white" style="font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3); line-height: 1.3; margin-bottom: 5px;">
+                            I.E.T Government High School
+                        </h5>
+                        <small class="text-white" style="font-weight: 600; opacity: 0.95; font-size: 0.85rem;">Management System</small>
                     </div>
                     @yield('sidebar')
                 </div>
