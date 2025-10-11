@@ -7,6 +7,18 @@ use App\Http\Controllers\MarkController;
 use App\Http\Controllers\AttendanceController;
 
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Redirect home to students list
+// Route::get('/', function () {
+//     return redirect()->route('students.index');
+// });
+
+// Admin Dashboard Route
 Route::get('/', function () {
     $stats = [
         'total_students' => \App\Models\Student::count(),
