@@ -39,6 +39,27 @@
 @endsection
 
 @section('content')
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <strong>Oops!</strong> There were some problems with your input.
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <!-- Students Stats -->
     <div class="row mb-2">
         <div class="col-md-3 col-6 mb-2">
@@ -220,83 +241,145 @@
                     <h5 class="modal-title">Add New Student</h5>
                     <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form action="{{ route('students.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="studentId">Student ID</label>
-                                    <input class="form-control" id="studentId" type="text" placeholder="STU001"
-                                        required>
+                                    <label for="student_id">Student ID <span class="text-danger">*</span></label>
+                                    <input class="form-control @error('student_id') is-invalid @enderror" 
+                                           id="student_id" 
+                                           name="student_id" 
+                                           type="text" 
+                                           placeholder="STU001"
+                                           value="{{ old('student_id') }}"
+                                           required>
+                                    @error('student_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="form-group mb-3">
-                                    <label for="studentName">Full Name</label>
-                                    <input class="form-control" id="studentName" type="text" required>
+                                    <label for="name">Full Name <span class="text-danger">*</span></label>
+                                    <input class="form-control @error('name') is-invalid @enderror" 
+                                           id="name" 
+                                           name="name" 
+                                           type="text"
+                                           value="{{ old('name') }}"
+                                           required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentEmail">Email</label>
-                                    <input class="form-control" id="studentEmail" type="email" required>
+                                    <label for="email">Email <span class="text-danger">*</span></label>
+                                    <input class="form-control @error('email') is-invalid @enderror" 
+                                           id="email" 
+                                           name="email" 
+                                           type="email"
+                                           value="{{ old('email') }}"
+                                           required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentPhone">Phone</label>
-                                    <input class="form-control" id="studentPhone" type="tel">
+                                    <label for="phone">Phone</label>
+                                    <input class="form-control @error('phone') is-invalid @enderror" 
+                                           id="phone" 
+                                           name="phone" 
+                                           type="tel"
+                                           value="{{ old('phone') }}">
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentClass">Class</label>
-                                    <select class="form-control" id="studentClass" required>
+                                    <label for="class">Class <span class="text-danger">*</span></label>
+                                    <select class="form-control @error('class') is-invalid @enderror" 
+                                            id="class" 
+                                            name="class" 
+                                            required>
                                         <option value="">Select Class</option>
-                                        <option value="Class 6A">Class 6A</option>
-                                        <option value="Class 6B">Class 6B</option>
-                                        <option value="Class 7A">Class 7A</option>
-                                        <option value="Class 7B">Class 7B</option>
-                                        <option value="Class 8A">Class 8A</option>
-                                        <option value="Class 8B">Class 8B</option>
+                                        <option value="Class 6A" {{ old('class') == 'Class 6A' ? 'selected' : '' }}>Class 6A</option>
+                                        <option value="Class 6B" {{ old('class') == 'Class 6B' ? 'selected' : '' }}>Class 6B</option>
+                                        <option value="Class 7A" {{ old('class') == 'Class 7A' ? 'selected' : '' }}>Class 7A</option>
+                                        <option value="Class 7B" {{ old('class') == 'Class 7B' ? 'selected' : '' }}>Class 7B</option>
+                                        <option value="Class 8A" {{ old('class') == 'Class 8A' ? 'selected' : '' }}>Class 8A</option>
+                                        <option value="Class 8B" {{ old('class') == 'Class 8B' ? 'selected' : '' }}>Class 8B</option>
                                     </select>
+                                    @error('class')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentGender">Gender</label>
-                                    <select class="form-control" id="studentGender" required>
+                                    <label for="gender">Gender <span class="text-danger">*</span></label>
+                                    <select class="form-control @error('gender') is-invalid @enderror" 
+                                            id="gender" 
+                                            name="gender" 
+                                            required>
                                         <option value="">Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                                        <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                                        <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
+                                    @error('gender')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentDOB">Date of Birth</label>
-                                    <input class="form-control" id="studentDOB" type="date" required>
+                                    <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                                    <input class="form-control @error('date_of_birth') is-invalid @enderror" 
+                                           id="date_of_birth" 
+                                           name="date_of_birth" 
+                                           type="date"
+                                           value="{{ old('date_of_birth') }}"
+                                           required>
+                                    @error('date_of_birth')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="studentAddress">Address</label>
-                                    <input class="form-control" id="studentAddress" type="text">
+                                    <label for="address">Address</label>
+                                    <input class="form-control @error('address') is-invalid @enderror" 
+                                           id="address" 
+                                           name="address" 
+                                           type="text"
+                                           value="{{ old('address') }}">
+                                    @error('address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                    <button class="btn btn-success" type="button">Add Student</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                        <button class="btn btn-success" type="submit">
+                            <i class="fas fa-save"></i> Add Student
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -697,6 +780,12 @@
                     editStudentModal.hide();
                 });
             }
+
+            // Reopen Add Student Modal if there are validation errors
+            @if($errors->any())
+                const addStudentModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+                addStudentModal.show();
+            @endif
         });
     </script>
 @endsection
