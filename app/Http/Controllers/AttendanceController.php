@@ -15,7 +15,17 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $classes = Classes::all();
+        // Fetch all classes and convert to array format expected by the blade
+        $classes = Classes::all()->map(function ($class) {
+            return [
+                'id' => $class->id,
+                'name' => $class->name,
+                'section' => $class->section,
+                'students' => $class->students,
+                'teacher' => $class->teacher,
+            ];
+        })->toArray();
+
         return view('admin.attendance', compact('classes'));
     }
 
@@ -23,21 +33,52 @@ class AttendanceController extends Controller
      * Show the attendance marking page for a specific class.
      */
     public function markAttendance($classId)
-{
-    // find the class
-     $class =Classes::findOrFail($classId);
-     $attendance=Attendance::all();
-       $date = Carbon::now()->toDateString(); 
+    {
+        // Find the class
+        $classModel = Classes::findOrFail($classId);
+        
+        // Convert class to array format
+        $class = [
+            'id' => $classModel->id,
+            'name' => $classModel->name,
+            'section' => $classModel->section,
+            'students' => $classModel->students,
+            'teacher' => $classModel->teacher,
+        ];
+        
+        // Fetch all attendance and convert to array format
+        $attendance = Attendance::all()->map(function ($attend) {
+            return [
+                'id' => $attend->id,
+                'class' => $attend->class,
+                'date' => $attend->date,
+                'student' => $attend->student,
+                'status' => $attend->status,
+            ];
+        })->toArray();
+        
+        $date = Carbon::now()->toDateString(); 
 
-    // get all students (you can filter by class if needed)
-    $students = Student::where('class', $class->name . $class->section)->get();
+        // Get all students and convert to array format
+        $students = Student::where('class', $classModel->name . $classModel->section)
+            ->get()
+            ->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'student_id' => $student->student_id,
+                    'name' => $student->name,
+                    'email' => $student->email,
+                    'class' => $student->class,
+                    'gender' => $student->gender,
+                    'date_of_birth' => $student->date_of_birth,
+                    'phone' => $student->phone,
+                    'address' => $student->address,
+                ];
+            })->toArray();
 
-    // current date
-   
-
-    // pass variables to view
-    return view('admin.attend', compact('class', 'students','date','attendance'));
-}
+        // Pass variables to view
+        return view('admin.attend', compact('class', 'students', 'date', 'attendance'));
+    }
 
     /**
      * Store attendance records.

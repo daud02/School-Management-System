@@ -8,24 +8,29 @@ use Illuminate\Http\Request;
 class MarkController extends Controller
 {
     /**
-     * Display a listing of the marks.
+     * Display a listing of marks
      */
     public function index()
     {
-        $marks = Marks::all();
+        // Fetch all marks and convert to array format expected by the blade
+        $marks = Marks::all()->map(function ($mark) {
+            return [
+                'id' => $mark->id,
+                'student_name' => $mark->student_name,
+                'class' => $mark->class,
+                'subject' => $mark->subject,
+                'marks' => $mark->marks,
+                'grade' => $mark->grade,
+                'exam_type' => $mark->exam_type,
+                'date' => $mark->date,
+            ];
+        })->toArray();
+
         return view('admin.marks', compact('marks'));
     }
 
     /**
-     * Show the form for creating a new mark entry.
-     */
-    public function create()
-    {
-        return view('admin.create');
-    }
-
-    /**
-     * Store a newly created mark in database.
+     * Store a newly created mark
      */
     public function store(Request $request)
     {
@@ -45,19 +50,12 @@ class MarkController extends Controller
     }
 
     /**
-     * Show the form for editing the specified mark.
+     * Update the specified mark
      */
-    public function edit(Marks $marks)
+    public function update(Request $request, $id)
     {
-        return view('admin.edit', compact('marks'));
-    }
-
-    /**
-     * Update the specified mark in database.
-     */
-    public function update(Request $request,Marks $marks )
-    {
-       
+        // Find mark by id
+        $mark = Marks::where('id', $id)->firstOrFail();
 
         $validated = $request->validate([
             'student_name' => 'required|string|max:255',
@@ -69,17 +67,20 @@ class MarkController extends Controller
             'date' => 'required|date'
         ]);
 
-       $marks->update($validated);
+        $mark->update($validated);
 
         return redirect()->route('marks.index')->with('success', 'Mark updated successfully!');
     }
 
     /**
-     * Remove the specified mark from database.
+     * Remove the specified mark
      */
-    public function destroy(Marks $marks)
+    public function destroy($id)
     {
-        $marks->delete();
+        // Find mark by id
+        $mark = Marks::where('id', $id)->firstOrFail();
+        
+        $mark->delete();
 
         return redirect()->route('marks.index')->with('success', 'Mark deleted successfully!');
     }
