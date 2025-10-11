@@ -6,18 +6,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\AttendanceController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
 
-// Redirect home to students list
-// Route::get('/', function () {
-//     return redirect()->route('students.index');
-// });
-
-// Admin Dashboard Route
 Route::get('/', function () {
     $stats = [
         'total_students' => \App\Models\Student::count(),
@@ -56,41 +45,6 @@ Route::delete('/marks/{id}', [MarkController::class, 'destroy'])->name('marks.de
 
 
 
-// Route::get('/', function () {
-//     return redirect()->route('admin.students');
-// });
-
-// Route::resource('students', StudentController::class);
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\ClassController;
-
-// // Classes Routes
-// Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
-// Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create');
-// Route::post('/classes', [ClassController::class, 'store'])->name('classes.store');
-// Route::get('/classes/{classes}/edit', [ClassController::class, 'edit'])->name('classes.edit');
-// Route::put('/classes/{classes}', [ClassController::class, 'update'])->name('classes.update');
-// Route::delete('/classes/{classes}', [ClassController::class, 'destroy'])->name('classes.destroy');
-
-
-// use App\Http\Controllers\MarkController;
-// use Illuminate\Support\Facades\Route;
-
-// // Marks Management Routes - Using Route Model Binding
-// Route::prefix('admin')->group(function () {
-//     Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
-//     Route::get('/marks/create', [MarkController::class, 'create'])->name('marks.create');
-//     Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
-//     Route::get('/marks/{marks}/edit', [MarkController::class, 'edit'])->name('marks.edit');
-//     Route::put('/marks/{marks}', [MarkController::class, 'update'])->name('marks.update');
-//     Route::delete('/marks/{marks}', [MarkController::class, 'destroy'])->name('marks.destroy');
-// });<?php
-
-// Attendance Routes
 Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 Route::get('/attendance/mark/{classId}', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
 Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
