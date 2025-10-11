@@ -30,6 +30,9 @@ Route::prefix('admin')->group(function () {
     //Route::post('/routine/{class}/update', [RoutineController::class, 'update'])->name('admin.routine.update');
     Route::get('/routine/create', [RoutineController::class, 'create'])->name('admin.routine.create');
     Route::post('/routine/update/{class}', [RoutineController::class, 'update'])->name('admin.routine.update');
+    Route::get('/routine/edit', [RoutineController::class, 'showStaticForm'])->name('admin.routine.static');
+    Route::post('/routine/edit', [RoutineController::class, 'saveStaticForm'])->name('admin.routine.static.save');
+
 
 });
 

@@ -8,6 +8,53 @@ use Carbon\Carbon;
 
 class RoutineController extends Controller
 {
+    public function showStaticForm()
+    {
+        $days = ['Saturday','Sunday','Monday','Tuesday','Wednesday'];
+        $timeSlots = [
+            '08:00 AM - 09:00 AM',
+            '09:00 AM - 10:00 AM',
+            '10:00 AM - 11:00 AM',
+            '11:00 AM - 12:00 PM'
+        ];
+        return view('admin.routine_static', compact('days', 'timeSlots'));
+    }
+
+    public function saveStaticForm(Request $request)
+    {
+        $days = ['Saturday','Sunday','Monday','Tuesday','Wednesday'];
+        $timeSlots = [
+            '08:00 AM - 09:00 AM',
+            '09:00 AM - 10:00 AM',
+            '10:00 AM - 11:00 AM',
+            '11:00 AM - 12:00 PM'
+        ];
+
+        $validated = $request->validate([
+            'class' => 'required|string|max:255',
+            'day' => 'required|string',
+            'time' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'instructor' => 'nullable|string|max:255',
+            'room' => 'nullable|string|max:255',
+        ]);
+
+        $col = array_search($validated['day'], $days);
+        $row = array_search($validated['time'], $timeSlots);
+
+        if ($col === false || $row === false) {
+            return back()->withErrors(['Invalid day or time selected']);
+        }
+        Routine::updateOrCreate(
+            ['class' => $validated['class'], 'row' => $row, 'col' => $col],
+            [
+                'subject' => $validated['subject'],
+                'instructor' => $validated['instructor'],
+                'room' => $validated['room']
+            ]
+        );
+        return back()->with('success', 'Routine cell saved successfully!');
+    }
     // Show form to load/edit routine
     public function create(Request $request)
     {

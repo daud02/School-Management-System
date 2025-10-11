@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # School Management System
 
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)](https://laravel.com)
@@ -85,3 +86,6 @@ Email: islam2107008@stud.kuet.ac.bd
 
 **Daud**  
 Email: mdsharif.abudaud@gmail.com
+=======
+# School-Management-System
+>>>>>>> 6f3dcc8fd38b685e6a88f5fed0b66bcf8e1fc025
