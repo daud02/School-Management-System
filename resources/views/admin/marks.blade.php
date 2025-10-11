@@ -192,7 +192,11 @@
                         @foreach ($marks as $mark)
                             <tr>
                                 <td>
-                                    <strong>{{ $mark['student_name'] }}</strong>
+                                    <strong>{{ $mark['student_id'] }}</strong>
+                                    @if(!empty($mark['student_name']))
+                                        <br>
+                                        <small class="text-muted">{{ $mark['student_name'] }}</small>
+                                    @endif
                                 </td>
                                 <td>{{ $mark['class'] }}</td>
                                 <td>
@@ -233,15 +237,24 @@
                                     </span>
                                 </td>
                                 <td>{{ $mark['exam_type'] }}</td>
-                                <td>{{ $mark['date'] }}</td>
+                                @php
+                                    try {
+                                        $inputDate = $mark['date'] ? \Carbon\Carbon::parse($mark['date'])->format('Y-m-d') : '';
+                                        $displayDate = $mark['date'] ? \Carbon\Carbon::parse($mark['date'])->format('M d, Y') : '';
+                                    } catch (\Exception $e) {
+                                        $inputDate = '';
+                                        $displayDate = $mark['date'] ?? '';
+                                    }
+                                @endphp
+                                <td>{{ $displayDate }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-warning edit-mark-btn"
                                             data-id="{{ $mark['id'] }}"
-                                            data-student="{{ $mark['student_name'] }}" data-class="{{ $mark['class'] }}"
+                                            data-student-id="{{ $mark['student_id'] }}" data-class="{{ $mark['class'] }}"
                                             data-subject="{{ $mark['subject'] }}" data-marks="{{ $mark['marks'] }}"
                                             data-grade="{{ $mark['grade'] }}" data-exam-type="{{ $mark['exam_type'] }}"
-                                            data-date="{{ $mark['date'] }}" type="button" title="Edit Marks">
+                                            data-date="{{ $inputDate }}" type="button" title="Edit Marks">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <form action="{{ route('marks.destroy', $mark['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this mark?');">
@@ -358,8 +371,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentName">Student Name</label>
-                                    <input class="form-control" id="editStudentName" name="student_name" type="text" required>
+                                    <label for="editStudentId">Student ID</label>
+                                    <input class="form-control" id="editStudentId" name="student_id" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -461,9 +474,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="addStudentName">Student Name</label>
-                                    <input class="form-control" id="addStudentName" name="student_name" type="text"
-                                        placeholder="Enter student name" required>
+                                    <label for="addStudentId">Student ID</label>
+                                    <input class="form-control" id="addStudentId" name="student_id" type="text"
+                                        placeholder="Enter student id (e.g. STU-1001)" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -657,7 +670,7 @@
                 button.addEventListener('click', function() {
                     // Get data from button attributes
                     const markId = this.getAttribute('data-id');
-                    const studentName = this.getAttribute('data-student');
+                    const studentId = this.getAttribute('data-student-id');
                     const studentClass = this.getAttribute('data-class');
                     const subject = this.getAttribute('data-subject');
                     const marks = this.getAttribute('data-marks');
@@ -669,7 +682,7 @@
                     editMarksForm.action = `/marks/${markId}`;
 
                     // Populate the edit form
-                    document.getElementById('editStudentName').value = studentName;
+                    document.getElementById('editStudentId').value = studentId;
                     document.getElementById('editClass').value = studentClass;
                     document.getElementById('editSubject').value = subject;
                     document.getElementById('editMarks').value = marks;
@@ -680,7 +693,7 @@
                     // Show the modal
                     editMarksModal.show();
 
-                    console.log('Edit marks:', studentName, subject, markId);
+                    console.log('Edit marks:', studentId, subject, markId);
                 });
             });
         });

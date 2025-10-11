@@ -65,7 +65,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                 <h6 class="card-title mb-0 text-white">
-                    <i class="fas fa-calendar-check"></i> Mark Attendance - {{ $class['name'] }} {{ $class['section'] }}
+                    <i class="fas fa-calendar-check"></i> Mark Attendance - {{ $class['name']. $class['section'] }}
                 </h6>
                 <a href="{{ route('attendance.index') }}" class="btn btn-light btn-sm">
                     <i class="fas fa-arrow-left"></i> Back
@@ -206,7 +206,7 @@
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 text-dark" style="font-size: 1rem; font-weight: 600;">
-                                            {{ $class['name'] }} {{ $class['section'] }}
+                                           {{ $class['name'] . $class['section'] }}
                                         </h6>
                                         <p class="text-muted mb-0" style="font-size: 0.85rem;">
                                             <i class="fas fa-users"></i> {{ $class['students'] }} Students

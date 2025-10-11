@@ -12,17 +12,19 @@ class MarkController extends Controller
      */
     public function index()
     {
-        // Fetch all marks and convert to array format expected by the blade
-        $marks = Marks::all()->map(function ($mark) {
+        // Fetch all marks with student relation and convert to array format expected by the blade
+        $marks = Marks::with('student')->get()->map(function ($mark) {
             return [
                 'id' => $mark->id,
-                'student_name' => $mark->student_name,
+                'student_id' => $mark->student_id,
+                'student_name' => $mark->student ? $mark->student->name : null,
                 'class' => $mark->class,
                 'subject' => $mark->subject,
                 'marks' => $mark->marks,
                 'grade' => $mark->grade,
                 'exam_type' => $mark->exam_type,
-                'date' => $mark->date,
+                // Ensure date is formatted as Y-m-d for HTML input[type=date]
+                'date' => $mark->date ? ($mark->date instanceof \Illuminate\Support\Carbon ? $mark->date->format('Y-m-d') : date('Y-m-d', strtotime($mark->date))) : null,
             ];
         })->toArray();
 
@@ -35,7 +37,7 @@ class MarkController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_name' => 'required|string|max:255',
+            'student_id' => 'required|string|max:255',
             'class' => 'required|string|max:50',
             'subject' => 'required|string|max:100',
             'marks' => 'required|integer|min:0|max:100',
@@ -58,7 +60,7 @@ class MarkController extends Controller
         $mark = Marks::where('id', $id)->firstOrFail();
 
         $validated = $request->validate([
-            'student_name' => 'required|string|max:255',
+            'student_id' => 'required|string|max:255',
             'class' => 'required|string|max:50',
             'subject' => 'required|string|max:100',
             'marks' => 'required|integer|min:0|max:100',
