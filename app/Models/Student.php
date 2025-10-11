@@ -1,19 +1,41 @@
 <?php
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Student extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'student_id', 'full_name', 'email', 'class', 
-        'gender', 'date_of_birth', 'phone',
+        'student_id',
+        
+        'name',
+        'email',
+        'class',
+        'gender',
+        'date_of_birth',
+        'phone',
+        'address',
+        
+        
     ];
 
-    // Example: relation to attendance (once we create attendances table)
-    public function attendances()
-    {
-        return $this->hasMany(Attendance::class);
-    }
-}
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
+    /**
+     * Boot the model.
+     */
+//     protected static function boot()
+//     {
+//         parent::boot();
+
+//         static::creating(function ($student) {
+//             if (empty($student->student_id)) {
+//                 $student->student_id = 'STU' . str_pad(Student::max('id') + 1, 3, '0', STR_PAD_LEFT);
+//             }
+//         });
+//     }
+ }

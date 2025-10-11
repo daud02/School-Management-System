@@ -1,10 +1,9 @@
-<<<<<<< HEAD
-# School Management System
+# I.E.T Government High School Management System
 
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue.svg)](https://php.net)
 
-A school management system built with Laravel for managing students, classes, attendance, and academic records.
+A comprehensive school management system built with Laravel for I.E.T Government High School, managing students, classes, attendance, and academic records.
 
 ## Features
 
@@ -86,6 +85,4 @@ Email: islam2107008@stud.kuet.ac.bd
 
 **Daud**  
 Email: mdsharif.abudaud@gmail.com
-=======
 # School-Management-System
->>>>>>> 6f3dcc8fd38b685e6a88f5fed0b66bcf8e1fc025
