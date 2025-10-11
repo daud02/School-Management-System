@@ -39,6 +39,26 @@
 @endsection
 
 @section('content')
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <!-- Marks Overview Stats -->
     <div class="row mb-2">
         <div class="col-md-3 col-6 mb-2">
@@ -217,15 +237,20 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-warning edit-mark-btn"
+                                            data-id="{{ $mark['id'] }}"
                                             data-student="{{ $mark['student_name'] }}" data-class="{{ $mark['class'] }}"
                                             data-subject="{{ $mark['subject'] }}" data-marks="{{ $mark['marks'] }}"
                                             data-grade="{{ $mark['grade'] }}" data-exam-type="{{ $mark['exam_type'] }}"
                                             data-date="{{ $mark['date'] }}" type="button" title="Edit Marks">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" type="button" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <form action="{{ route('marks.destroy', $mark['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this mark?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -326,19 +351,29 @@
                     <h5 class="modal-title">Edit Marks Information</h5>
                     <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form id="editMarksForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editStudentName">Student Name</label>
-                                    <input class="form-control" id="editStudentName" type="text" readonly>
+                                    <input class="form-control" id="editStudentName" name="student_name" type="text" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editClass">Class</label>
-                                    <input class="form-control" id="editClass" type="text" readonly>
+                                    <select class="form-control" id="editClass" name="class" required>
+                                        <option value="">Select Class</option>
+                                        <option value="Class 6A">Class 6A</option>
+                                        <option value="Class 6B">Class 6B</option>
+                                        <option value="Class 7A">Class 7A</option>
+                                        <option value="Class 7B">Class 7B</option>
+                                        <option value="Class 8A">Class 8A</option>
+                                        <option value="Class 8B">Class 8B</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -346,7 +381,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editSubject">Subject</label>
-                                    <select class="form-control" id="editSubject" required>
+                                    <select class="form-control" id="editSubject" name="subject" required>
                                         <option value="">Select Subject</option>
                                         <option value="Mathematics">Mathematics</option>
                                         <option value="English">English</option>
@@ -359,7 +394,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editExamType">Exam Type</label>
-                                    <select class="form-control" id="editExamType" required>
+                                    <select class="form-control" id="editExamType" name="exam_type" required>
                                         <option value="">Select Exam Type</option>
                                         <option value="Mid Term">Mid Term</option>
                                         <option value="Final Term">Final Term</option>
@@ -373,14 +408,14 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editMarks">Marks (%)</label>
-                                    <input class="form-control" id="editMarks" type="number" min="0"
+                                    <input class="form-control" id="editMarks" name="marks" type="number" min="0"
                                         max="100" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editGrade">Grade</label>
-                                    <select class="form-control" id="editGrade" required>
+                                    <select class="form-control" id="editGrade" name="grade" required>
                                         <option value="">Select Grade</option>
                                         <option value="A+">A+</option>
                                         <option value="A">A</option>
@@ -396,18 +431,18 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-3">
                                     <label for="editDate">Exam Date</label>
-                                    <input class="form-control" id="editDate" type="date" required>
+                                    <input class="form-control" id="editDate" name="date" type="date" required>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                    <button class="btn btn-warning" id="updateMarksBtn" type="button">
-                        <i class="fas fa-save"></i> Update Marks
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                        <button class="btn btn-warning" type="submit">
+                            <i class="fas fa-save"></i> Update Marks
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -420,20 +455,21 @@
                     <h5 class="modal-title">Add New Marks</h5>
                     <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form action="{{ route('marks.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addStudentName">Student Name</label>
-                                    <input class="form-control" id="addStudentName" type="text"
+                                    <input class="form-control" id="addStudentName" name="student_name" type="text"
                                         placeholder="Enter student name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addClass">Class</label>
-                                    <select class="form-control" id="addClass" required>
+                                    <select class="form-control" id="addClass" name="class" required>
                                         <option value="">Select Class</option>
                                         <option value="Class 6A">Class 6A</option>
                                         <option value="Class 6B">Class 6B</option>
@@ -449,7 +485,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addSubject">Subject</label>
-                                    <select class="form-control" id="addSubject" required>
+                                    <select class="form-control" id="addSubject" name="subject" required>
                                         <option value="">Select Subject</option>
                                         <option value="Mathematics">Mathematics</option>
                                         <option value="English">English</option>
@@ -462,7 +498,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addExamType">Exam Type</label>
-                                    <select class="form-control" id="addExamType" required>
+                                    <select class="form-control" id="addExamType" name="exam_type" required>
                                         <option value="">Select Exam Type</option>
                                         <option value="Mid Term">Mid Term</option>
                                         <option value="Final Term">Final Term</option>
@@ -476,14 +512,14 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addMarks">Marks (%)</label>
-                                    <input class="form-control" id="addMarks" type="number" min="0"
+                                    <input class="form-control" id="addMarks" name="marks" type="number" min="0"
                                         max="100" placeholder="Enter marks" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="addGrade">Grade</label>
-                                    <select class="form-control" id="addGrade" required>
+                                    <select class="form-control" id="addGrade" name="grade" required>
                                         <option value="">Select Grade</option>
                                         <option value="A+">A+</option>
                                         <option value="A">A</option>
@@ -499,18 +535,18 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-3">
                                     <label for="addDate">Exam Date</label>
-                                    <input class="form-control" id="addDate" type="date" required>
+                                    <input class="form-control" id="addDate" name="date" type="date" required>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                    <button class="btn btn-success" id="addMarksBtn" type="button">
-                        <i class="fas fa-plus"></i> Add Marks
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                        <button class="btn btn-success" type="submit">
+                            <i class="fas fa-plus"></i> Add Marks
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -614,11 +650,13 @@
 
             // Edit Marks Modal functionality
             const editMarksModal = new bootstrap.Modal(document.getElementById('editMarksModal'));
+            const editMarksForm = document.getElementById('editMarksForm');
             const editButtons = document.querySelectorAll('.edit-mark-btn');
 
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     // Get data from button attributes
+                    const markId = this.getAttribute('data-id');
                     const studentName = this.getAttribute('data-student');
                     const studentClass = this.getAttribute('data-class');
                     const subject = this.getAttribute('data-subject');
@@ -626,6 +664,9 @@
                     const grade = this.getAttribute('data-grade');
                     const examType = this.getAttribute('data-exam-type');
                     const date = this.getAttribute('data-date');
+
+                    // Update form action with the correct route
+                    editMarksForm.action = `/marks/${markId}`;
 
                     // Populate the edit form
                     document.getElementById('editStudentName').value = studentName;
@@ -639,92 +680,9 @@
                     // Show the modal
                     editMarksModal.show();
 
-                    console.log('Edit marks:', studentName, subject);
+                    console.log('Edit marks:', studentName, subject, markId);
                 });
             });
-
-            // Handle Update Marks button click
-            const updateMarksBtn = document.getElementById('updateMarksBtn');
-            if (updateMarksBtn) {
-                updateMarksBtn.addEventListener('click', function() {
-                    const studentName = document.getElementById('editStudentName').value;
-                    const studentClass = document.getElementById('editClass').value;
-                    const subject = document.getElementById('editSubject').value;
-                    const marks = document.getElementById('editMarks').value;
-                    const grade = document.getElementById('editGrade').value;
-                    const examType = document.getElementById('editExamType').value;
-                    const date = document.getElementById('editDate').value;
-
-                    console.log('Updating marks:', {
-                        student: studentName,
-                        class: studentClass,
-                        subject: subject,
-                        marks: marks,
-                        grade: grade,
-                        examType: examType,
-                        date: date
-                    });
-
-                    // Here you would typically send an AJAX request to update the marks
-                    // For now, we'll just show an alert
-                    alert('Marks updated successfully!\n\nStudent: ' + studentName + '\nSubject: ' +
-                        subject + '\nMarks: ' + marks + '%\nGrade: ' + grade);
-
-                    // Close the modal
-                    editMarksModal.hide();
-                });
-            }
-
-            // Add Marks Modal functionality
-            const addMarksModal = new bootstrap.Modal(document.getElementById('addMarksModal'));
-            const addMarksBtn = document.getElementById('addMarksBtn');
-
-            if (addMarksBtn) {
-                addMarksBtn.addEventListener('click', function() {
-                    const studentName = document.getElementById('addStudentName').value;
-                    const studentClass = document.getElementById('addClass').value;
-                    const subject = document.getElementById('addSubject').value;
-                    const marks = document.getElementById('addMarks').value;
-                    const grade = document.getElementById('addGrade').value;
-                    const examType = document.getElementById('addExamType').value;
-                    const date = document.getElementById('addDate').value;
-
-                    // Validate form
-                    if (!studentName || !studentClass || !subject || !marks || !grade || !examType || !
-                        date) {
-                        alert('Please fill in all required fields!');
-                        return;
-                    }
-
-                    console.log('Adding new marks:', {
-                        student: studentName,
-                        class: studentClass,
-                        subject: subject,
-                        marks: marks,
-                        grade: grade,
-                        examType: examType,
-                        date: date
-                    });
-
-                    // Here you would typically send an AJAX request to add the marks
-                    // For now, we'll just show an alert
-                    alert('Marks added successfully!\n\nStudent: ' + studentName + '\nClass: ' +
-                        studentClass + '\nSubject: ' + subject + '\nMarks: ' + marks + '%\nGrade: ' +
-                        grade);
-
-                    // Clear the form
-                    document.getElementById('addStudentName').value = '';
-                    document.getElementById('addClass').selectedIndex = 0;
-                    document.getElementById('addSubject').selectedIndex = 0;
-                    document.getElementById('addMarks').value = '';
-                    document.getElementById('addGrade').selectedIndex = 0;
-                    document.getElementById('addExamType').selectedIndex = 0;
-                    document.getElementById('addDate').value = '';
-
-                    // Close the modal
-                    addMarksModal.hide();
-                });
-            }
         });
     </script>
 @endsection

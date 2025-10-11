@@ -39,27 +39,6 @@
 @endsection
 
 @section('content')
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Error Messages -->
-    @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle"></i> <strong>Oops!</strong> There were some problems with your input.
-            <ul class="mb-0 mt-2">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <!-- Students Stats -->
     <div class="row mb-2">
         <div class="col-md-3 col-6 mb-2">
@@ -182,7 +161,7 @@
                     <tbody>
                         @foreach ($students as $student)
                             <tr>
-                                <td>{{ $student['id'] }}</td>
+                                <td><strong>{{ $student['student_id'] }}</strong></td>
 
                                 <td>
                                     <div>
@@ -201,28 +180,40 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-info view-student-btn"
-                                            data-id="{{ $student['id'] }}" data-name="{{ $student['name'] }}"
-                                            data-email="{{ $student['email'] }}" data-class="{{ $student['class'] }}"
+                                            data-student-id="{{ $student['student_id'] }}"
+                                            data-name="{{ $student['name'] }}"
+                                            data-email="{{ $student['email'] }}" 
+                                            data-class="{{ $student['class'] }}"
                                             data-gender="{{ $student['gender'] }}"
                                             data-dob="{{ $student['date_of_birth'] }}"
                                             data-phone="{{ $student['phone'] ?? '' }}"
-                                            data-address="{{ $student['address'] ?? '' }}" type="button"
+                                            data-address="{{ $student['address'] ?? '' }}" 
+                                            type="button"
                                             title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                         <button class="btn btn-sm btn-outline-warning edit-student-btn"
-                                            data-id="{{ $student['id'] }}" data-name="{{ $student['name'] }}"
-                                            data-email="{{ $student['email'] }}" data-class="{{ $student['class'] }}"
+                                            data-student-id="{{ $student['student_id'] }}"
+                                            data-name="{{ $student['name'] }}"
+                                            data-email="{{ $student['email'] }}" 
+                                            data-class="{{ $student['class'] }}"
                                             data-gender="{{ $student['gender'] }}"
                                             data-dob="{{ $student['date_of_birth'] }}"
                                             data-phone="{{ $student['phone'] ?? '' }}"
-                                            data-address="{{ $student['address'] ?? '' }}" type="button"
+                                            data-address="{{ $student['address'] ?? '' }}" 
+                                            type="button"
                                             title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" type="button" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <form action="{{ route('students.destroy', $student['student_id']) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-outline-danger" type="submit" 
+                                                    onclick="return confirm('Are you sure you want to delete {{ $student['name'] }}?')" 
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -241,15 +232,15 @@
                     <h5 class="modal-title">Add New Student</h5>
                     <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <form action="{{ route('students.store') }}" method="POST">
+                <form action="{{ route('students.store') }}" method="POST" id="addStudentForm">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="student_id">Student ID <span class="text-danger">*</span></label>
+                                    <label for="studentId">Student ID <span class="text-danger">*</span></label>
                                     <input class="form-control @error('student_id') is-invalid @enderror" 
-                                           id="student_id" 
+                                           id="studentId" 
                                            name="student_id" 
                                            type="text" 
                                            placeholder="STU001"
@@ -262,9 +253,9 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="form-group mb-3">
-                                    <label for="name">Full Name <span class="text-danger">*</span></label>
+                                    <label for="studentName">Full Name <span class="text-danger">*</span></label>
                                     <input class="form-control @error('name') is-invalid @enderror" 
-                                           id="name" 
+                                           id="studentName" 
                                            name="name" 
                                            type="text"
                                            value="{{ old('name') }}"
@@ -278,9 +269,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="email">Email <span class="text-danger">*</span></label>
+                                    <label for="studentEmail">Email <span class="text-danger">*</span></label>
                                     <input class="form-control @error('email') is-invalid @enderror" 
-                                           id="email" 
+                                           id="studentEmail" 
                                            name="email" 
                                            type="email"
                                            value="{{ old('email') }}"
@@ -292,9 +283,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="phone">Phone</label>
+                                    <label for="studentPhone">Phone</label>
                                     <input class="form-control @error('phone') is-invalid @enderror" 
-                                           id="phone" 
+                                           id="studentPhone" 
                                            name="phone" 
                                            type="tel"
                                            value="{{ old('phone') }}">
@@ -307,9 +298,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="class">Class <span class="text-danger">*</span></label>
+                                    <label for="studentClass">Class <span class="text-danger">*</span></label>
                                     <select class="form-control @error('class') is-invalid @enderror" 
-                                            id="class" 
+                                            id="studentClass" 
                                             name="class" 
                                             required>
                                         <option value="">Select Class</option>
@@ -327,9 +318,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="gender">Gender <span class="text-danger">*</span></label>
+                                    <label for="studentGender">Gender <span class="text-danger">*</span></label>
                                     <select class="form-control @error('gender') is-invalid @enderror" 
-                                            id="gender" 
+                                            id="studentGender" 
                                             name="gender" 
                                             required>
                                         <option value="">Select Gender</option>
@@ -346,9 +337,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                                    <label for="studentDOB">Date of Birth <span class="text-danger">*</span></label>
                                     <input class="form-control @error('date_of_birth') is-invalid @enderror" 
-                                           id="date_of_birth" 
+                                           id="studentDOB" 
                                            name="date_of_birth" 
                                            type="date"
                                            value="{{ old('date_of_birth') }}"
@@ -360,9 +351,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="address">Address</label>
+                                    <label for="studentAddress">Address</label>
                                     <input class="form-control @error('address') is-invalid @enderror" 
-                                           id="address" 
+                                           id="studentAddress" 
                                            name="address" 
                                            type="text"
                                            value="{{ old('address') }}">
@@ -376,7 +367,7 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
                         <button class="btn btn-success" type="submit">
-                            <i class="fas fa-save"></i> Add Student
+                            <i class="fas fa-plus"></i> Add Student
                         </button>
                     </div>
                 </form>
@@ -392,42 +383,44 @@
                     <h5 class="modal-title">Edit Student Information</h5>
                     <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form action="" method="POST" id="editStudentForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentId">Student ID</label>
-                                    <input class="form-control" id="editStudentId" type="text" placeholder="STU001"
-                                        required>
+                                    <label for="editStudentId">Student ID <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="editStudentId" name="student_id" type="text" 
+                                           placeholder="STU001" required>
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentName">Full Name</label>
-                                    <input class="form-control" id="editStudentName" type="text" required>
+                                    <label for="editStudentName">Full Name <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="editStudentName" name="name" type="text" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentEmail">Email</label>
-                                    <input class="form-control" id="editStudentEmail" type="email" required>
+                                    <label for="editStudentEmail">Email <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="editStudentEmail" name="email" type="email" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editStudentPhone">Phone</label>
-                                    <input class="form-control" id="editStudentPhone" type="tel">
+                                    <input class="form-control" id="editStudentPhone" name="phone" type="tel">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentClass">Class</label>
-                                    <select class="form-control" id="editStudentClass" required>
+                                    <label for="editStudentClass">Class <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="editStudentClass" name="class" required>
                                         <option value="">Select Class</option>
                                         <option value="Class 6A">Class 6A</option>
                                         <option value="Class 6B">Class 6B</option>
@@ -440,11 +433,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentGender">Gender</label>
-                                    <select class="form-control" id="editStudentGender" required>
+                                    <label for="editStudentGender">Gender <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="editStudentGender" name="gender" required>
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -452,25 +446,25 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="editStudentDOB">Date of Birth</label>
-                                    <input class="form-control" id="editStudentDOB" type="date" required>
+                                    <label for="editStudentDOB">Date of Birth <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="editStudentDOB" name="date_of_birth" type="date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="editStudentAddress">Address</label>
-                                    <input class="form-control" id="editStudentAddress" type="text">
+                                    <input class="form-control" id="editStudentAddress" name="address" type="text">
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                    <button class="btn btn-warning" id="updateStudentBtn" type="button">
-                        <i class="fas fa-save"></i> Update Student
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                        <button class="btn btn-warning" type="submit">
+                            <i class="fas fa-save"></i> Update Student
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -688,7 +682,7 @@
             viewButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     // Get data from button attributes
-                    const studentId = this.getAttribute('data-id');
+                    const studentId = this.getAttribute('data-student-id');
                     const studentName = this.getAttribute('data-name');
                     const studentEmail = this.getAttribute('data-email');
                     const studentClass = this.getAttribute('data-class');
@@ -716,12 +710,13 @@
 
             // Edit Student Modal functionality
             const editStudentModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            const editStudentForm = document.getElementById('editStudentForm');
             const editButtons = document.querySelectorAll('.edit-student-btn');
 
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     // Get data from button attributes
-                    const studentId = this.getAttribute('data-id');
+                    const studentId = this.getAttribute('data-student-id');
                     const studentName = this.getAttribute('data-name');
                     const studentEmail = this.getAttribute('data-email');
                     const studentClass = this.getAttribute('data-class');
@@ -730,6 +725,14 @@
                     const studentPhone = this.getAttribute('data-phone');
                     const studentAddress = this.getAttribute('data-address');
 
+                    console.log('Edit student data:', {
+                        studentId, studentName, studentEmail, studentClass, 
+                        studentGender, studentDOB, studentPhone, studentAddress
+                    });
+
+                    // Update form action with the correct route
+                    editStudentForm.action = `/students/${studentId}`;
+
                     // Populate the edit form
                     document.getElementById('editStudentId').value = studentId;
                     document.getElementById('editStudentName').value = studentName;
@@ -737,49 +740,13 @@
                     document.getElementById('editStudentClass').value = studentClass;
                     document.getElementById('editStudentGender').value = studentGender;
                     document.getElementById('editStudentDOB').value = studentDOB;
-                    document.getElementById('editStudentPhone').value = studentPhone;
-                    document.getElementById('editStudentAddress').value = studentAddress;
+                    document.getElementById('editStudentPhone').value = studentPhone || '';
+                    document.getElementById('editStudentAddress').value = studentAddress || '';
 
                     // Show the modal
                     editStudentModal.show();
-
-                    console.log('Edit student:', studentId, studentName);
                 });
             });
-
-            // Handle Update Student button click
-            const updateStudentBtn = document.getElementById('updateStudentBtn');
-            if (updateStudentBtn) {
-                updateStudentBtn.addEventListener('click', function() {
-                    const studentId = document.getElementById('editStudentId').value;
-                    const studentName = document.getElementById('editStudentName').value;
-                    const studentEmail = document.getElementById('editStudentEmail').value;
-                    const studentClass = document.getElementById('editStudentClass').value;
-                    const studentGender = document.getElementById('editStudentGender').value;
-                    const studentDOB = document.getElementById('editStudentDOB').value;
-                    const studentPhone = document.getElementById('editStudentPhone').value;
-                    const studentAddress = document.getElementById('editStudentAddress').value;
-
-                    console.log('Updating student:', {
-                        id: studentId,
-                        name: studentName,
-                        email: studentEmail,
-                        class: studentClass,
-                        gender: studentGender,
-                        dob: studentDOB,
-                        phone: studentPhone,
-                        address: studentAddress
-                    });
-
-                    // Here you would typically send an AJAX request to update the student
-                    // For now, we'll just show an alert
-                    alert('Student information updated successfully!\n\nID: ' + studentId + '\nName: ' +
-                        studentName);
-
-                    // Close the modal
-                    editStudentModal.hide();
-                });
-            }
 
             // Reopen Add Student Modal if there are validation errors
             @if($errors->any())

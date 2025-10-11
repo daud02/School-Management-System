@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Classes Management')
-@section('page-title', 'Classes Management')
+@section('title',
+    'Class </div>
+    <div class="card-body p-3">
+        <div class="table-responsive">
+            <table class="table-hover table-sm table">anagement')
+            @section('page-title', 'Classes Management')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Classes</li>
-@endsection
+            @section('breadcrumb')
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Classes</li>
+            @endsection
 
             @section('sidebar')
                 <ul class="nav flex-column">
@@ -39,6 +43,26 @@
             @endsection
 
             @section('content')
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -94,9 +118,13 @@
                                                                 data-teacher="{{ $class['teacher'] }}">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
-                                                            <button class="btn btn-sm btn-outline-danger">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
+                                                            <form action="{{ route('classes.destroy', $class['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this class?');">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="btn btn-sm btn-outline-danger" type="submit">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -117,20 +145,14 @@
                                 <h5 class="modal-title">Add New Class</h5>
                                 <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                             </div>
-                            <div class="modal-body">
-                                <form>
+                            <form action="{{ route('classes.store') }}" method="POST">
+                                @csrf
+                                <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label for="addClassId">Class ID</label>
-                                                <input class="form-control" id="addClassId" type="text"
-                                                    placeholder="CLS001" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="addClassName">Class Name</label>
-                                                <input class="form-control" id="addClassName" type="text"
+                                                <input class="form-control" id="addClassName" name="name" type="text"
                                                     placeholder="Class 6" required>
                                             </div>
                                         </div>
@@ -139,7 +161,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label for="addClassSection">Section</label>
-                                                <select class="form-control" id="addClassSection" required>
+                                                <select class="form-control" id="addClassSection" name="section" required>
                                                     <option value="">Select Section</option>
                                                     <option value="A">Section A</option>
                                                     <option value="B">Section B</option>
@@ -151,7 +173,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label for="addClassStudents">Number of Students</label>
-                                                <input class="form-control" id="addClassStudents" type="number"
+                                                <input class="form-control" id="addClassStudents" name="students" type="number"
                                                     min="0" placeholder="0" required>
                                             </div>
                                         </div>
@@ -160,19 +182,19 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="addClassTeacher">Class Teacher</label>
-                                                <input class="form-control" id="addClassTeacher" type="text"
+                                                <input class="form-control" id="addClassTeacher" name="teacher" type="text"
                                                     placeholder="Teacher Name" required>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                                <button class="btn btn-primary" id="saveClassBtn" type="button">
-                                    <i class="fas fa-save"></i> Save Class
-                                </button>
-                            </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-save"></i> Save Class
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -185,20 +207,16 @@
                                 <h5 class="modal-title">Edit Class Information</h5>
                                 <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
                             </div>
-                            <div class="modal-body">
-                                <form>
+                            <form id="editClassForm" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-body">
+                                    <input type="hidden" id="editClassId" name="id">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group mb-3">
-                                                <label for="editClassId">Class ID</label>
-                                                <input class="form-control" id="editClassId" type="text"
-                                                    placeholder="CLS001" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="editClassName">Class Name</label>
-                                                <input class="form-control" id="editClassName" type="text"
+                                                <input class="form-control" id="editClassName" name="name" type="text"
                                                     placeholder="Class 6" required>
                                             </div>
                                         </div>
@@ -207,7 +225,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label for="editClassSection">Section</label>
-                                                <select class="form-control" id="editClassSection" required>
+                                                <select class="form-control" id="editClassSection" name="section" required>
                                                     <option value="">Select Section</option>
                                                     <option value="A">Section A</option>
                                                     <option value="B">Section B</option>
@@ -219,7 +237,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group mb-3">
                                                 <label for="editClassStudents">Number of Students</label>
-                                                <input class="form-control" id="editClassStudents" type="number"
+                                                <input class="form-control" id="editClassStudents" name="students" type="number"
                                                     min="0" placeholder="0" required>
                                             </div>
                                         </div>
@@ -228,19 +246,19 @@
                                         <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label for="editClassTeacher">Class Teacher</label>
-                                                <input class="form-control" id="editClassTeacher" type="text"
+                                                <input class="form-control" id="editClassTeacher" name="teacher" type="text"
                                                     placeholder="Teacher Name" required>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
-                                <button class="btn btn-warning" id="updateClassBtn" type="button">
-                                    <i class="fas fa-save"></i> Update Class
-                                </button>
-                            </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                                    <button class="btn btn-warning" type="submit">
+                                        <i class="fas fa-save"></i> Update Class
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -249,51 +267,9 @@
             @section('scripts')
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        // Add New Class Modal functionality
-                        const addClassModal = new bootstrap.Modal(document.getElementById('addClassModal'));
-                        const saveClassBtn = document.getElementById('saveClassBtn');
-
-                        if (saveClassBtn) {
-                            saveClassBtn.addEventListener('click', function() {
-                                const classId = document.getElementById('addClassId').value;
-                                const className = document.getElementById('addClassName').value;
-                                const classSection = document.getElementById('addClassSection').value;
-                                const classStudents = document.getElementById('addClassStudents').value;
-                                const classTeacher = document.getElementById('addClassTeacher').value;
-
-                                // Validation
-                                if (!classId || !className || !classSection || !classStudents || !classTeacher) {
-                                    alert('Please fill in all fields!');
-                                    return;
-                                }
-
-                                console.log('Adding new class:', {
-                                    id: classId,
-                                    name: className,
-                                    section: classSection,
-                                    students: classStudents,
-                                    teacher: classTeacher
-                                });
-
-                                // Here you would typically send an AJAX request to save the class
-                                // For now, we'll just show an alert
-                                alert('New class added successfully!\n\nID: ' + classId + '\nName: ' +
-                                    className + '\nSection: ' + classSection);
-
-                                // Clear the form
-                                document.getElementById('addClassId').value = '';
-                                document.getElementById('addClassName').value = '';
-                                document.getElementById('addClassSection').value = '';
-                                document.getElementById('addClassStudents').value = '';
-                                document.getElementById('addClassTeacher').value = '';
-
-                                // Close the modal
-                                addClassModal.hide();
-                            });
-                        }
-
                         // Edit Class Modal functionality
                         const editClassModal = new bootstrap.Modal(document.getElementById('editClassModal'));
+                        const editClassForm = document.getElementById('editClassForm');
                         const editButtons = document.querySelectorAll('.edit-class-btn');
 
                         editButtons.forEach(button => {
@@ -304,6 +280,9 @@
                                 const classSection = this.getAttribute('data-section');
                                 const classStudents = this.getAttribute('data-students');
                                 const classTeacher = this.getAttribute('data-teacher');
+
+                                // Update form action with the correct route
+                                editClassForm.action = `/classes/${classId}`;
 
                                 // Populate the edit form
                                 document.getElementById('editClassId').value = classId;
@@ -318,34 +297,7 @@
                                 console.log('Edit class:', classId, className);
                             });
                         });
-
-                        // Handle Update Class button click
-                        const updateClassBtn = document.getElementById('updateClassBtn');
-                        if (updateClassBtn) {
-                            updateClassBtn.addEventListener('click', function() {
-                                const classId = document.getElementById('editClassId').value;
-                                const className = document.getElementById('editClassName').value;
-                                const classSection = document.getElementById('editClassSection').value;
-                                const classStudents = document.getElementById('editClassStudents').value;
-                                const classTeacher = document.getElementById('editClassTeacher').value;
-
-                                console.log('Updating class:', {
-                                    id: classId,
-                                    name: className,
-                                    section: classSection,
-                                    students: classStudents,
-                                    teacher: classTeacher
-                                });
-
-                                // Here you would typically send an AJAX request to update the class
-                                // For now, we'll just show an alert
-                                alert('Class information updated successfully!\n\nID: ' + classId + '\nName: ' +
-                                    className + '\nSection: ' + classSection);
-
-                                // Close the modal
-                                editClassModal.hide();
-                            });
-                        }
                     });
                 </script>
             @endsection
+
