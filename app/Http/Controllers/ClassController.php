@@ -2,77 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classes;
 use Illuminate\Http\Request;
-use App\Models\Classes; // Add this import
 
 class ClassController extends Controller
 {
+    /**
+     * Display a listing of classes
+     */
     public function index()
     {
-        $classes = Classes::all();
-        return view('classes.index', compact('classes'));
+        // Fetch all classes and convert to array format expected by the blade
+        $classes = Classes::all()->map(function ($class) {
+            return [
+                'id' => $class->id,
+                'name' => $class->name,
+                'section' => $class->section,
+                'students' => $class->students,
+                'teacher' => $class->teacher,
+            ];
+        })->toArray();
+
+        return view('admin.classes', compact('classes'));
     }
 
     /**
-     * Show the form for creating a new class.
-     */
-    public function create()
-    {
-        return view('classes.create');
-    }
-
-    /**
-     * Store a newly created class in storage.
+     * Store a newly created class
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'section' => 'required|string|max:255',
-            'students' => 'required|integer|min:1',
+            'section' => 'required|string|max:10',
+            'students' => 'required|integer|min:0',
             'teacher' => 'required|string|max:255'
         ]);
 
         Classes::create($validated);
 
-        return redirect()->route('classes.index')
-            ->with('success', 'Class created successfully!');
+        return redirect()->route('classes.index')->with('success', 'Class added successfully!');
     }
 
     /**
-     * Show the form for editing the specified class.
+     * Update the specified class
      */
-    public function edit(Classes $classes)
+    public function update(Request $request, $id)
     {
-        return view('classes.edit', compact('classes'));
-    }
+        // Find class by id
+        $class = Classes::where('id', $id)->firstOrFail();
 
-    /**
-     * Update the specified class in storage.
-     */
-    public function update(Request $request, Classes $classes)
-    {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'section' => 'required|string|max:255',
-            'students' => 'required|integer|min:1',
+            'section' => 'required|string|max:10',
+            'students' => 'required|integer|min:0',
             'teacher' => 'required|string|max:255'
         ]);
 
-        $classes->update($validated);
+        $class->update($validated);
 
-        return redirect()->route('classes.index')
-            ->with('success', 'Class updated successfully!');
+        return redirect()->route('classes.index')->with('success', 'Class updated successfully!');
     }
 
     /**
-     * Remove the specified class from storage.
+     * Remove the specified class
      */
-    public function destroy(Classes $classes)
+    public function destroy($id)
     {
-        $classes->delete();
+        // Find class by id
+        $class = Classes::where('id', $id)->firstOrFail();
+        
+        $class->delete();
 
-        return redirect()->route('classes.index')
-            ->with('success', 'Class deleted successfully!');
+        return redirect()->route('classes.index')->with('success', 'Class deleted successfully!');
     }
 }

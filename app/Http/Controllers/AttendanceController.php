@@ -77,7 +77,7 @@ class AttendanceController extends Controller
             })->toArray();
 
         // Pass variables to view
-        return view('admin.attend', compact('class', 'students', 'date', 'attendance'));
+        return view('admin.attendance', compact('class', 'students', 'date', 'attendance'));
     }
 
     /**
