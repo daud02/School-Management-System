@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\Routine;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
@@ -45,8 +48,43 @@ class StudentController extends Controller
 
     // Calculate overall average
     $overallAvg = $marks->avg(fn($m) => $m->marks);
+    $days = ['Saturday','Sunday','Monday','Tuesday','Wednesday'];
 
-    return view('student.dashboard', compact('stats', 'marks', 'overallAvg'));
+
+
+
+    $timeSlots = [
+        '08:00 AM - 09:00 AM',
+        '09:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 PM'
+    ];
+    $today = Carbon::now()->format('l'); // e.g., Monday
+    $student = Student::where('student_id', $studentId)->firstOrFail();
+    $class = $student->class;
+    // If today is Friday or Saturday, return empty
+    if (in_array($today, ['Friday','Saturday'])) {
+        $todaySchedule = [];
+    } else {
+        // Find column index for today
+        $col = array_search($today, $days);
+        
+        // Fetch routines for this class and today's column
+        $todaySchedule = Routine::where('class', $class)
+            ->where('col', $col)
+            ->orderBy('row')
+            ->get();
+        
+            $todaySchedule = $todaySchedule->map(function ($s) use ($timeSlots) {
+                return (object)[
+                    'time' => $timeSlots[$s->row] ?? 'Slot ' . ($s->row + 1),
+                    'subject' => $s->subject,
+                    'room' => $s->room,
+                    'teacher' => $s->instructor
+                ];
+            });
+    }
+    return view('student.dashboard', compact('stats', 'marks', 'overallAvg','todaySchedule','student'));
     }
     public function index()
     {

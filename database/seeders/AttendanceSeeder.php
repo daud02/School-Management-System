@@ -23,7 +23,7 @@ class AttendanceSeeder extends Seeder
 
         foreach ($dates as $date) {
             DB::table('attendances')->updateOrInsert(
-                ['student_id' => $studentId, 'class' => $class, 'date' => Carbon::parse($date)],
+                ['student' => $studentId, 'class' => $class, 'date' => Carbon::parse($date)],
                 ['status' => rand(0, 1) ? 'present' : 'absent', 'updated_at' => now(), 'created_at' => now()]
             );
         }

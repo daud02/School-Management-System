@@ -147,6 +147,7 @@ class RoutineController extends Controller
     }
     public function todaySchedule(Request $request)
     {
+       // dd('todaySchedule called');
         $studentSession = $request->session()->get('student');
 
         if (!$studentSession) {
