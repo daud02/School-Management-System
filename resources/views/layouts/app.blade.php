@@ -98,27 +98,22 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
         .stats-card-2 {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
         }
-
         .stats-card-3 {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
         }
-
         .stats-card-4 {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             color: white;
         }
-
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
         }
-
         .breadcrumb {
             background: none;
             padding: 0;
@@ -223,7 +218,6 @@
             .mobile-menu-toggle {
                 display: block;
             }
-
             .sidebar {
                 position: fixed;
                 top: 0;
@@ -280,12 +274,10 @@
                 flex-direction: column;
                 align-items: flex-start !important;
             }
-
             .btn-group {
                 margin-bottom: 10px;
             }
         }
-
         @media (max-width: 575.98px) {
             .stats-card h2 {
                 font-size: 1.5rem;
@@ -305,7 +297,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Mobile Menu Toggle Button -->
     <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -501,19 +492,16 @@
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-
             // Toggle sidebar
             mobileMenuToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('show');
                 sidebarOverlay.classList.toggle('show');
             });
-
             // Close sidebar when clicking overlay
             sidebarOverlay.addEventListener('click', function() {
                 sidebar.classList.remove('show');
                 sidebarOverlay.classList.remove('show');
             });
-
             // Close sidebar when clicking a nav link (mobile only)
             if (window.innerWidth < 768) {
                 const navLinks = sidebar.querySelectorAll('.nav-link');

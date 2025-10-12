@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title',
     'Class </div>
     <div class="card-body p-3">
@@ -300,4 +299,3 @@
                     });
                 </script>
             @endsection
-

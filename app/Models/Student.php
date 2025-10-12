@@ -1,7 +1,4 @@
 <?php
-
-
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +9,6 @@ class Student extends Model
 
     protected $fillable = [
         'student_id',
-        
         'name',
         'email',
         'class',
@@ -20,8 +16,6 @@ class Student extends Model
         'date_of_birth',
         'phone',
         'address',
-        
-        
     ];
 
     protected $casts = [

@@ -11,18 +11,15 @@ use App\Http\Controllers\RoutineController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\StudentsMarkController;
+Route::get('/', function () {
+    return view('welcome');
+});
 
+// ======================
+// Admin Routes
+// ======================
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// Redirect home to students list
-// Route::get('/', function () {
-//     return redirect()->route('students.index');
-// });
 
 // Admin Dashboard Route
 Route::get('/', function () {
@@ -238,6 +235,6 @@ Route::prefix('student')->group(function () {
     // Dashboard route (no student_id in path)
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/routine', [RoutineController::class, 'show'])->name('student.routine');
-    Route::get('/marks', [StudentMarkController::class, 'index'])->name('student.marks');
+    Route::get('/marks', [StudentsMarkController::class, 'index'])->name('student.marks');
     Route::get('/attendance', [StudentAttendanceController::class, 'index'])->name('student.attendance');
 });

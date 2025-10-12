@@ -121,7 +121,7 @@ class AttendanceController extends Controller
         Attendance::create([
             'class' => $validated['class'],
             'date' => $validated['date'],
-           'student' => $student->name,
+           'student' => $student->student_id,
             'status' => $status,
             
         ]);

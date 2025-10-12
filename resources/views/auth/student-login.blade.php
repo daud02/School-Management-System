@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - School Management System</title>
+    <title>Student Login - School Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
         }
 
         .login-left {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
             padding: 60px 40px;
             color: white;
             flex: 1;
@@ -90,8 +90,8 @@
         }
 
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
             outline: none;
         }
 
@@ -113,16 +113,16 @@
             top: -10px;
             left: 10px;
             font-size: 0.8rem;
-            color: #667eea;
+            color: #2563eb;
             font-weight: 600;
         }
 
         .btn-login {
             background: transparent;
-            color: #667eea;
+            color: #2563eb;
             padding: 12px;
             border-radius: 10px;
-            border: 2px solid #667eea;
+            border: 2px solid #2563eb;
             font-weight: 600;
             font-size: 1rem;
             transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
@@ -139,7 +139,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
             border-radius: 8px;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -152,13 +152,13 @@
 
         .btn-login:hover {
             color: white;
-            border-color: #667eea;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            border-color: #2563eb;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
         }
 
         .form-check-input:checked {
-            background-color: #667eea;
-            border-color: #667eea;
+            background-color: #2563eb;
+            border-color: #2563eb;
         }
 
         .switch-login {
@@ -168,13 +168,13 @@
         }
 
         .switch-login a {
-            color: #667eea;
+            color: #2563eb;
             text-decoration: none;
             font-weight: 600;
         }
 
         .switch-login a:hover {
-            color: #764ba2;
+            color: #0284c7;
             text-decoration: underline;
         }
 
@@ -203,35 +203,20 @@
     <div class="login-container">
         <!-- Left Side -->
         <div class="login-left">
-            <i class="fas fa-user-shield"></i>
-            <h2>Welcome Back, Admin!</h2>
-            <p>Access your administrative dashboard to manage the school system efficiently.</p>
+            <i class="fas fa-user-graduate"></i>
+            <h2>Welcome, Student!</h2>
+            <p>Access your student portal to view grades, attendance, and more.</p>
         </div>
 
         <!-- Right Side -->
         <div class="login-right">
-            <h3 class="mb-4">Admin Login</h3>
+            <h3 class="mb-4">Student Login</h3>
 
-            <form action="{{ route('admin.login.submit') }}" method="POST">
-                @csrf
-                
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </div>
-                @endif
-
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
+            <form action="{{ route('student.login.submit') }}" method="POST">
+                @csrf 
                 <div class="form-group">
-                    <input class="form-control" id="email" name="email" type="email" value="{{ old('email') }}" placeholder=" " required>
-                    <label class="form-label" for="email">Email Address</label>
+                    <input class="form-control" name="email" id="studentId" type="text" placeholder=" " required>
+                    <label class="form-label" for="studentId">Student Email</label>
                 </div>
 
                 <div class="form-group">
@@ -246,7 +231,7 @@
                             Remember me
                         </label>
                     </div>
-                    <a class="text-decoration-none" href="#" style="color: #667eea;">Forgot Password?</a>
+                    <a class="text-decoration-none" href="#" style="color: #2563eb;">Forgot Password?</a>
                 </div>
 
                 <button class="btn btn-login" type="submit">
@@ -255,7 +240,7 @@
             </form>
 
             <div class="switch-login">
-                <p>Are you a student? <a href="{{ route('student.login') }}">Login as Student</a></p>
+                <p>Are you an admin? <a href="{{ route('admin.login') }}">Login as Admin</a></p>
             </div>
         </div>
     </div>

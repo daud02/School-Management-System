@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Marks;
 use Illuminate\Http\Request;
+use App\Models\Mark;
+
 
 class MarkController extends Controller
 {
@@ -13,7 +13,7 @@ class MarkController extends Controller
     public function index()
     {
         // Fetch all marks with student relation and convert to array format expected by the blade
-        $marks = Marks::with('student')->get()->map(function ($mark) {
+        $marks = Mark::with('student')->get()->map(function ($mark) {
             return [
                 'id' => $mark->id,
                 'student_id' => $mark->student_id,

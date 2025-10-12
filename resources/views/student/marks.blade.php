@@ -13,43 +13,55 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header py-2">
-            <h6 class="card-title mb-0"><i class="fas fa-chart-line"></i> My Exam Results</h6>
-        </div>
-        <div class="card-body p-1">
-            <div class="table-responsive">
-                <table class="table-striped table-sm table">
-                    <thead>
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> My Exam Results</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Exam</th>
+                        <th>Marks</th>
+                        <th>Total</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($marks as $mark)
                         <tr>
-                            <th>Subject</th>
-                            <th>Exam</th>
-                            <th>Marks</th>
-                            <th>Total</th>
-                            <th>Grade</th>
+                            <td><i class="fas fa-book text-primary me-2"></i>{{ $mark['subject'] }}</td>
+                            <td>{{ $mark['exam'] }}</td>
+                            <td><span class="badge bg-success">{{ $mark['marks'] }}</span></td>
+                            <td>{{ $mark['total'] }}</td>
+                            <td>
+                                @if($mark['grade'] == 'A+')
+                                    <span class="badge bg-success">{{ $mark['grade'] }}</span>
+                                @elseif($mark['grade'] == 'A')
+                                    <span class="badge bg-info">{{ $mark['grade'] }}</span>
+                                @elseif($mark['grade'] == 'A-')
+                                    <span class="badge bg-primary">{{ $mark['grade'] }}</span>
+                                @elseif($mark['grade'] == 'B')
+                                    <span class="badge bg-warning">{{ $mark['grade'] }}</span>
+                                @elseif($mark['grade'] == 'C')
+                                    <span class="badge bg-secondary">{{ $mark['grade'] }}</span>
+                                @elseif($mark['grade'] == 'D')
+                                    <span class="badge bg-light text-dark">{{ $mark['grade'] }}</span>
+                                @else
+                                    <span class="badge bg-danger">{{ $mark['grade'] }}</span>
+                                @endif
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($marks as $mark)
-                            <tr>
-                                <td><i class="fas fa-book text-primary me-1"></i>{{ $mark['subject'] }}</td>
-                                <td><small>{{ $mark['exam'] }}</small></td>
-                                <td><span class="badge bg-success">{{ $mark['marks'] }}</span></td>
-                                <td><small>{{ $mark['total'] }}</small></td>
-                                <td>
-                                    @if ($mark['grade'] == 'A+')
-                                        <span class="badge bg-success">{{ $mark['grade'] }}</span>
-                                    @elseif($mark['grade'] == 'A')
-                                        <span class="badge bg-info">{{ $mark['grade'] }}</span>
-                                    @else
-                                        <span class="badge bg-warning">{{ $mark['grade'] }}</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No marks found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 @endsection

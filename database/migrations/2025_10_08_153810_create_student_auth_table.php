@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('marks', function (Blueprint $table) {
+        Schema::create('student_auth', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id');
-            $table->string('student_name');
-            $table->string('class');
-            $table->string('subject');
-            $table->integer('marks');
-            $table->string('grade');
-            $table->string('exam_type');
-            $table->date('date');
+            $table->string('student_id')->unique();  // Student’s unique ID
+            $table->string('email')->unique();       // Email for login
+            $table->string('password');              // Hashed password
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('marks');
+        Schema::dropIfExists('student_auth');
     }
 };
