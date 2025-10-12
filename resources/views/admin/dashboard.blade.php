@@ -1,5 +1,8 @@
 @extends('layouts.app')
-
+@php
+    // Add this after existing PHP code
+    //dd($todaySchedule); // This will dump and die, showing the contents of $todaySchedule
+@endphp
 @section('title', 'Admin Dashboard')
 @section('page-title', 'Admin Dashboard')
 

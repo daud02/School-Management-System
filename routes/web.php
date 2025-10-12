@@ -10,7 +10,7 @@ use App\Http\Controllers\RoutineController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\AttendanceController;
-
+use App\Http\Controllers\StudentsMarkController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 
 // Admin Dashboard Route
-Route::get('/', function () {
+Route::get('/admin', function () {
     $stats = [
         'total_students' => \App\Models\Student::count(),
         'total_teachers' => 0, // Update this when you have teachers
@@ -82,6 +82,6 @@ Route::prefix('student')->group(function () {
     // Dashboard route (no student_id in path)
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/routine', [RoutineController::class, 'show'])->name('student.routine');
-    Route::get('/marks', [StudentMarkController::class, 'index'])->name('student.marks');
+    Route::get('/marks', [StudentsMarkController::class, 'index'])->name('student.marks');
     Route::get('/attendance', [StudentAttendanceController::class, 'index'])->name('student.attendance');
 });

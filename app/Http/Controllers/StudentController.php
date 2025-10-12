@@ -17,11 +17,11 @@ class StudentController extends Controller
 
     // attendance percentage calculation
     $totalClasses = DB::table('attendances')
-        ->where('student_id', $studentId)
+        ->where('student', $studentId)
         ->count();
 
     $presentCount = DB::table('attendances')
-        ->where('student_id', $studentId)
+        ->where('student', $studentId)
         ->where('status', 'Present')
         ->count();
 
@@ -38,10 +38,10 @@ class StudentController extends Controller
 
     // Fetch marks dynamically from database
     $marks = DB::table('marks')
-        ->join('subjects', 'marks.subject_code', '=', 'subjects.code')
-        ->where('marks.student_id', $studentId)
-        ->select('subjects.name as subject', 'marks.mark as marks', 'marks.created_at as date')
-        ->get();
+    ->where('student_id', $studentId) // filter by student
+    ->select('subject', 'marks as marks', 'created_at as date') // select columns directly
+    ->get();
+
 
     // Calculate overall average
     $overallAvg = $marks->avg(fn($m) => $m->marks);

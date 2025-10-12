@@ -16,7 +16,7 @@ class MarkController extends Controller
         $marks = Marks::all()->map(function ($mark) {
             return [
                 'id' => $mark->id,
-                'student_name' => $mark->student_name,
+                'student_id' => $mark->student_id,
                 'class' => $mark->class,
                 'subject' => $mark->subject,
                 'marks' => $mark->marks,
@@ -35,7 +35,7 @@ class MarkController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_name' => 'required|string|max:255',
+            'student_id' => 'required|string|max:255',
             'class' => 'required|string|max:50',
             'subject' => 'required|string|max:100',
             'marks' => 'required|integer|min:0|max:100',
@@ -58,7 +58,7 @@ class MarkController extends Controller
         $mark = Marks::where('id', $id)->firstOrFail();
 
         $validated = $request->validate([
-            'student_name' => 'required|string|max:255',
+            'student_id' => 'required|string|max:255',
             'class' => 'required|string|max:50',
             'subject' => 'required|string|max:100',
             'marks' => 'required|integer|min:0|max:100',

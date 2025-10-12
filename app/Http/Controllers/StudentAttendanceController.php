@@ -12,7 +12,7 @@ class StudentAttendanceController extends Controller
     {
         $student_id = session('student.id'); // get logged-in student's ID from session
         // Fetch attendance records for the student
-        $attendance = Attendance::where('student_id', $student_id)
+        $attendance = Attendance::where('student', $student_id)
             ->orderBy('date', 'desc')
             ->get()
             ->map(function ($record) {

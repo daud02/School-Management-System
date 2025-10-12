@@ -10,14 +10,13 @@ class StudentAuthSeeder extends Seeder
 {
     public function run(): void
     {
-        StudentAuth::firstOrCreate(
+        StudentAuth::updateOrInsert(
             // 🔑 Fields to check for existing record
             ['student_id' => '1'],
-
             // 🆕 Data to insert if not exists
             [
                 'email'    => 'john@example.com',
-                'password' => Hash::make('1234'), // hashed password
+                'password' => Hash::make("daud"), // hashed password
             ]
         );
     }
