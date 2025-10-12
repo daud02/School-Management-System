@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentMarkController;
 use App\Http\Controllers\StudentAttendanceController;
@@ -21,7 +22,23 @@ Route::get('/', function () {
 
 
 // Admin Dashboard Route
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// ======================
+// Admin Routes
+// ======================
+
+
+// Admin Dashboard Route
 Route::get('/admin', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access the admin dashboard.'
+        ]);
+    }
+
     $stats = [
         'total_students' => \App\Models\Student::count(),
         'total_teachers' => 0, // Update this when you have teachers
@@ -32,45 +49,181 @@ Route::get('/admin', function () {
 })->name('admin.dashboard');
 
 // Student Management Routes
-Route::get('/students', [StudentController::class, 'index'])->name('students.index');
-Route::post('/students', [StudentController::class, 'store'])->name('students.store');
-Route::put('/students/{student_id}', [StudentController::class, 'update'])->name('students.update');
-Route::delete('/students/{student_id}', [StudentController::class, 'destroy'])->name('students.destroy');
+Route::get('/students', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(StudentController::class)->index();
+})->name('students.index');
+Route::post('/students', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(StudentController::class)->store(request());
+})->name('students.store');
+Route::put('/students/{student_id}', function ($student_id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(StudentController::class)->update(request(), $student_id);
+})->name('students.update');
+Route::delete('/students/{student_id}', function ($student_id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(StudentController::class)->destroy($student_id);
+})->name('students.destroy');
 
 // Admin Routes (aliases for navigation)
-Route::get('/admin/students', [StudentController::class, 'index'])->name('admin.students');
-Route::get('/admin/classes', [ClassController::class, 'index'])->name('admin.classes');
-Route::get('/admin/marks', [MarkController::class, 'index'])->name('admin.marks');
+Route::get('/admin/students', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(StudentController::class)->index();
+})->name('admin.students');
+Route::get('/admin/classes', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(ClassController::class)->index();
+})->name('admin.classes');
+Route::get('/admin/marks', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(MarkController::class)->index();
+})->name('admin.marks');
 Route::get('/admin/attendance', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
     return redirect()->route('attendance.index');
 })->name('admin.attendance');
 
 // Class Management Routes
-Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
-Route::post('/classes', [ClassController::class, 'store'])->name('classes.store');
-Route::put('/classes/{id}', [ClassController::class, 'update'])->name('classes.update');
-Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
+Route::get('/classes', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(ClassController::class)->index();
+})->name('classes.index');
+Route::post('/classes', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(ClassController::class)->store(request());
+})->name('classes.store');
+Route::put('/classes/{id}', function ($id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(ClassController::class)->update(request(), $id);
+})->name('classes.update');
+Route::delete('/classes/{id}', function ($id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(ClassController::class)->destroy($id);
+})->name('classes.destroy');
 
 // Marks Management Routes
-Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
-Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
-Route::put('/marks/{id}', [MarkController::class, 'update'])->name('marks.update');
-Route::delete('/marks/{id}', [MarkController::class, 'destroy'])->name('marks.destroy');
+Route::get('/marks', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(MarkController::class)->index();
+})->name('marks.index');
+Route::post('/marks', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(MarkController::class)->store(request());
+})->name('marks.store');
+Route::put('/marks/{id}', function ($id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(MarkController::class)->update(request(), $id);
+})->name('marks.update');
+Route::delete('/marks/{id}', function ($id) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(MarkController::class)->destroy($id);
+})->name('marks.destroy');
 
 
-Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-Route::get('/attendance/mark/{classId}', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
-Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+Route::get('/attendance', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(AttendanceController::class)->index();
+})->name('attendance.index');
+Route::get('/attendance/mark/{classId}', function ($classId) {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(AttendanceController::class)->markAttendance($classId);
+})->name('attendance.mark');
+Route::post('/attendance/store', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login')->withErrors([
+            'email' => 'Please log in to access admin sections.'
+        ]);
+    }
+    return app(AttendanceController::class)->store(request());
+})->name('attendance.store');
 
 
-Route::prefix('admin')->group(function () {
-    Route::get('/login', [AdminController::class, 'showLoginForm'])->name('admin.login'); // Optional admin login
-    Route::get('/routine/{class}/edit', [RoutineController::class, 'edit'])->name('admin.routine.edit');
-    Route::get('/routine/create', [RoutineController::class, 'create'])->name('admin.routine.create');
-    Route::post('/routine/update/{class}', [RoutineController::class, 'update'])->name('admin.routine.update');
-    Route::get('/routine/edit', [RoutineController::class, 'showStaticForm'])->name('admin.routine.static');
-    Route::post('/routine/edit', [RoutineController::class, 'saveStaticForm'])->name('admin.routine.static.save');
-});
+// Route::prefix('admin')->group(function () {
+//     // Admin Authentication Routes
+//     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+//     Route::post('/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.submit');
+//     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    
+//     // Admin Routine Routes
+//     Route::get('/routine/{class}/edit', [RoutineController::class, 'edit'])->name('admin.routine.edit');
+//     Route::get('/routine/create', [RoutineController::class, 'create'])->name('admin.routine.create');
+//     Route::post('/routine/update/{class}', [RoutineController::class, 'update'])->name('admin.routine.update');
+//     Route::get('/routine/edit', [RoutineController::class, 'showStaticForm'])->name('admin.routine.static');
+//     Route::post('/routine/edit', [RoutineController::class, 'saveStaticForm'])->name('admin.routine.static.save');
+// });
 
 // ======================
 // Student Routes

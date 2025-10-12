@@ -44,30 +44,179 @@
             <h5 class="card-title mb-0"><i class="fas fa-calendar-check"></i> Student Attendance</h5>
             <button class="btn btn-primary"><i class="fas fa-plus"></i> Mark Attendance</button>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr><th>Student</th><th>Class</th><th>Date</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody>
-                        @foreach($attendance as $record)
-                        <tr>
-                            <td><i class="fas fa-user text-info me-2"></i>{{ $record['student'] }}</td>
-                            <td>{{ $record['class'] }}</td>
-                            <td>{{ $record['date'] }}</td>
-                            <td>
-                                @if($record['status'] == 'Present')
-                                    <span class="badge bg-success">Present</span>
-                                @elseif($record['status'] == 'Absent')
-                                    <span class="badge bg-danger">Absent</span>
-                                @else
-                                    <span class="badge bg-warning">Late</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+    @endif
+
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <strong>Oops!</strong> There were some problems.
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(isset($class) && isset($students))
+        <!-- ATTENDANCE MARKING FORM -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                <h6 class="card-title mb-0 text-white">
+                    <i class="fas fa-calendar-check"></i> Mark Attendance - {{ $class['name']. $class['section'] }}
+                </h6>
+                <a href="{{ route('attendance.index') }}" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="bg-light mb-3 rounded p-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small><strong><i class="fas fa-calendar"></i> Date:</strong> {{ $date }}</small>
+                        </div>
+                        <div class="col-md-4">
+                            <small><strong><i class="fas fa-chalkboard-teacher"></i> Teacher:</strong> {{ $class['teacher'] }}</small>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <small><strong><i class="fas fa-users"></i> Total Students:</strong> {{ count($students) }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{{ route('attendance.store') }}" method="POST" id="attendanceForm">
+                    @csrf
+                    <input type="hidden" name="class" value="{{ $class['name'] }}{{ $class['section'] }}">
+                    <input type="hidden" name="date" value="{{ $date }}">
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">Roll</th>
+                                    <th style="width: 35%;">Student Name</th>
+                                    <th style="width: 25%;">Email</th>
+                                    <th style="width: 30%;" class="text-center">Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($students as $index => $student)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <strong>{{ $student['name'] }}</strong><br>
+                                            <small class="text-muted">ID: {{ $student['student_id'] }}</small>
+                                        </td>
+                                        <td>{{ $student['email'] }}</td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <input type="radio" class="btn-check" name="attendance[{{ $student['id'] }}]" 
+                                                       id="present_{{ $student['id'] }}" value="present" checked>
+                                                <label class="btn btn-outline-success btn-sm" for="present_{{ $student['id'] }}">
+                                                    <i class="fas fa-check"></i> Present
+                                                </label>
+
+                                                <input type="radio" class="btn-check" name="attendance[{{ $student['id'] }}]" 
+                                                       id="absent_{{ $student['id'] }}" value="absent">
+                                                <label class="btn btn-outline-danger btn-sm" for="absent_{{ $student['id'] }}">
+                                                    <i class="fas fa-times"></i> Absent
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center">No students found in this class.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if(count($students) > 0)
+                        <div class="mt-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="markAllPresent()">
+                                    <i class="fas fa-check-double"></i> Mark All Present
+                                </button>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="markAllAbsent()">
+                                    <i class="fas fa-times-circle"></i> Mark All Absent
+                                </button>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Submit Attendance
+                            </button>
+                        </div>
+                    @endif
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="card mt-3">
+            <div class="card-header py-2">
+                <h6 class="card-title mb-0"><i class="fas fa-chart-bar"></i> Quick Summary</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center p-3">
+                                <h3 class="mb-0" id="presentCount">{{ count($students) }}</h3>
+                                <small>Students Present</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center p-3">
+                                <h3 class="mb-0" id="absentCount">0</h3>
+                                <small>Students Absent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    @else
+        <!-- CLASS SELECTION VIEW -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h6 class="mb-3"><i class="fas fa-chalkboard-teacher"></i> Select a Class to Mark Attendance</h6>
+            </div>
+        </div>
+        <div class="row">
+            @php
+                $colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+                $icons = ['fa-book', 'fa-graduation-cap', 'fa-user-graduate', 'fa-chalkboard', 'fa-book-open', 'fa-school'];
+            @endphp
+
+            @forelse ($classes as $index => $class)
+                <div class="col-md-4 mb-3">
+                    <a href="{{ route('attendance.mark', $class['id']) }}" class="text-decoration-none">
+                        <div class="card class-card h-100" style="cursor: pointer;">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3"
+                                        style="background: {{ $colors[$index % count($colors)] }}; width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas {{ $icons[$index % count($icons)] }} text-white" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-dark" style="font-size: 1rem; font-weight: 600;">
+                                           {{ $class['name'] . $class['section'] }}
+                                        </h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.85rem;">
+                                            <i class="fas fa-users"></i> {{ $class['students'] }} Students
+                                        </p>
+                                        <p class="text-muted mb-0" style="font-size: 0.85rem;">
+                                            <i class="fas fa-chalkboard-teacher"></i> {{ $class['teacher'] }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-chevron-right text-muted"></i>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

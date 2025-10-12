@@ -97,7 +97,8 @@ class StudentController extends Controller
                 'email' => $student->email,
                 'class' => $student->class,
                 'gender' => $student->gender,
-                'date_of_birth' => $student->date_of_birth,
+                // Format date_of_birth to Y-m-d so HTML input[type=date] accepts it without the time portion
+                'date_of_birth' => $student->date_of_birth ? $student->date_of_birth->format('Y-m-d') : null,
                 'phone' => $student->phone,
                 'address' => $student->address,
             ];

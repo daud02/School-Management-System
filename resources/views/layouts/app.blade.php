@@ -344,9 +344,10 @@
                                     <i class="fas fa-user"></i> Profile
                                 </button>
                             @endif
-                            <button class="btn btn-sm btn-outline-secondary" type="button">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </button>
+                     <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+    @csrf
+    <button type="submit" class="btn btn-link text-danger p-0 m-0 align-baseline">Logout</button>
+</form>
                         </div>
                     </div>
                 </div>

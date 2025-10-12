@@ -212,14 +212,30 @@
         <div class="login-right">
             <h3 class="mb-4">Admin Login</h3>
 
-            <form action="{{ route('admin.dashboard') }}" method="GET">
+            <form action="{{ route('admin.login.submit') }}" method="POST">
+                @csrf
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="form-group">
-                    <input class="form-control" id="email" type="email" placeholder=" " required>
+                    <input class="form-control" id="email" name="email" type="email" value="{{ old('email') }}" placeholder=" " required>
                     <label class="form-label" for="email">Email Address</label>
                 </div>
 
                 <div class="form-group">
-                    <input class="form-control" id="password" type="password" placeholder=" " required>
+                    <input class="form-control" id="password" name="password" type="password" placeholder=" " required>
                     <label class="form-label" for="password">Password</label>
                 </div>
 

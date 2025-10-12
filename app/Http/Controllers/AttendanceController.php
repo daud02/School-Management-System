@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
@@ -59,9 +58,29 @@ class AttendanceController extends Controller
         
         $date = Carbon::now()->toDateString(); 
 
-        // Get all students and convert to array format
-        $students = Student::where('class', $classModel->name . $classModel->section)
-            ->get()
+        // Get students for this class - match the concatenated name+section format
+        $classShort = $classModel->name . $classModel->section; // e.g. "7A", "7B"
+        
+        // Debug: Let's also try some variations in case of data format issues
+        $possibleFormats = [
+            $classShort,                                    // "7A"
+            strtoupper($classShort),                       // "7A" (ensure uppercase)
+            $classModel->name . ' ' . $classModel->section, // "7 A" (with space)
+            'Class ' . $classShort,                        // "Class 7A"
+        ];
+        
+        // Try to find students with any of these formats
+        $students = Student::whereIn('class', $possibleFormats)->get();
+        
+        // If still no students found, try a broader search
+        if ($students->isEmpty()) {
+            $students = Student::where('class', 'LIKE', '%' . $classModel->name . '%')
+                              ->where('class', 'LIKE', '%' . $classModel->section . '%')
+                              ->get();
+        }
+
+        // Convert to array format
+        $students = $students
             ->map(function ($student) {
                 return [
                     'id' => $student->id,
