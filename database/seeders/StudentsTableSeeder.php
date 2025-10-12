@@ -9,12 +9,12 @@ class StudentsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        Student::firstOrCreate(
+        Student::updateOrInsert(
             ['student_id' => '1'], // unique check
             [
                 'name' => 'John Doe',            // <-- changed from full_name to name
                 'email' => 'john@example.com',
-                'class' => '10',
+                'class' => '10A',
                 'gender' => 'Male',
                 'date_of_birth' => '2008-05-12',
                 'phone' => '0123456789',
@@ -22,12 +22,12 @@ class StudentsTableSeeder extends Seeder
             ]
         );
 
-        Student::firstOrCreate(
+        Student::updateOrInsert(
             ['student_id' => '2'], // unique check
             [
                 'name' => 'Jane Smith',          // <-- changed from full_name to name
                 'email' => 'jane@example.com',
-                'class' => '10',
+                'class' => '10A',
                 'gender' => 'Female',
                 'date_of_birth' => '2008-08-22',
                 'phone' => '0987654321',

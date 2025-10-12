@@ -211,19 +211,19 @@ Route::post('/attendance/store', function () {
 })->name('attendance.store');
 
 
-// Route::prefix('admin')->group(function () {
-//     // Admin Authentication Routes
-//     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-//     Route::post('/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.submit');
-//     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+Route::prefix('admin')->group(function () {
+    // Admin Authentication Routes
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     
-//     // Admin Routine Routes
-//     Route::get('/routine/{class}/edit', [RoutineController::class, 'edit'])->name('admin.routine.edit');
-//     Route::get('/routine/create', [RoutineController::class, 'create'])->name('admin.routine.create');
-//     Route::post('/routine/update/{class}', [RoutineController::class, 'update'])->name('admin.routine.update');
-//     Route::get('/routine/edit', [RoutineController::class, 'showStaticForm'])->name('admin.routine.static');
-//     Route::post('/routine/edit', [RoutineController::class, 'saveStaticForm'])->name('admin.routine.static.save');
-// });
+    // Admin Routine Routes
+    Route::get('/routine/{class}/edit', [RoutineController::class, 'edit'])->name('admin.routine.edit');
+    Route::get('/routine/create', [RoutineController::class, 'create'])->name('admin.routine.create');
+    Route::post('/routine/update/{class}', [RoutineController::class, 'update'])->name('admin.routine.update');
+    Route::get('/routine/edit', [RoutineController::class, 'showStaticForm'])->name('admin.routine.static');
+    Route::post('/routine/edit', [RoutineController::class, 'saveStaticForm'])->name('admin.routine.static.save');
+});
 
 // ======================
 // Student Routes

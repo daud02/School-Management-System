@@ -39,10 +39,11 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0"><i class="fas fa-calendar-check"></i> Student Attendance</h5>
-            <button class="btn btn-primary"><i class="fas fa-plus"></i> Mark Attendance</button>
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
@@ -218,12 +219,83 @@
                                         <i class="fas fa-chevron-right text-muted"></i>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No classes found. Please add classes first.
+                    </div>
+                </div>
+            @endforelse
         </div>
-    </div>
+    @endif
+@endsection
+
+@section('scripts')
+    @if(isset($class) && isset($students))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attendanceInputs = document.querySelectorAll('input[type="radio"][name^="attendance"]');
+            
+            // Update summary on radio button change
+            attendanceInputs.forEach(input => {
+                input.addEventListener('change', updateSummary);
+            });
+
+            // Initial summary update
+            updateSummary();
+
+            function updateSummary() {
+                const totalStudents = {{ count($students) }};
+                let presentCount = 0;
+                let absentCount = 0;
+
+                attendanceInputs.forEach(input => {
+                    if (input.checked) {
+                        if (input.value === 'present') {
+                            presentCount++;
+                        } else if (input.value === 'absent') {
+                            absentCount++;
+                        }
+                    }
+                });
+
+                document.getElementById('presentCount').textContent = presentCount;
+                document.getElementById('absentCount').textContent = absentCount;
+            }
+        });
+
+        function markAllPresent() {
+            const presentRadios = document.querySelectorAll('input[type="radio"][value="present"]');
+            presentRadios.forEach(radio => {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            });
+        }
+
+        function markAllAbsent() {
+            if (confirm('Are you sure you want to mark all students as absent?')) {
+                const absentRadios = document.querySelectorAll('input[type="radio"][value="absent"]');
+                absentRadios.forEach(radio => {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                });
+            }
+        }
+    </script>
+    @endif
+
+    <style>
+        .class-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 @endsection

@@ -10,10 +10,11 @@ class MarksTableSeeder extends Seeder
 {
     public function run(): void
     {
-        // Sample data for student 1
-        Mark::firstOrCreate(
+        // Student 1
+        Mark::updateOrInsert(
             ['student_id' => '1', 'subject' => 'Mathematics', 'exam_type' => 'Midterm'],
             [
+                'student_name' => 'John Doe',
                 'class' => '10',
                 'marks' => 85,
                 'grade' => 'A+',
@@ -21,9 +22,10 @@ class MarksTableSeeder extends Seeder
             ]
         );
 
-        Mark::firstOrCreate(
+        Mark::updateOrInsert(
             ['student_id' => '1', 'subject' => 'Physics', 'exam_type' => 'Midterm'],
             [
+                'student_name' => 'John Doe',
                 'class' => '10',
                 'marks' => 78,
                 'grade' => 'A',
@@ -31,10 +33,11 @@ class MarksTableSeeder extends Seeder
             ]
         );
 
-        // Sample data for student 2
+        // Student 2
         Mark::firstOrCreate(
             ['student_id' => '2', 'subject' => 'Mathematics', 'exam_type' => 'Midterm'],
             [
+                'student_name' => 'Jane Smith',
                 'class' => '10',
                 'marks' => 92,
                 'grade' => 'A+',
@@ -45,6 +48,7 @@ class MarksTableSeeder extends Seeder
         Mark::firstOrCreate(
             ['student_id' => '2', 'subject' => 'Physics', 'exam_type' => 'Midterm'],
             [
+                'student_name' => 'Jane Smith',
                 'class' => '10',
                 'marks' => 68,
                 'grade' => 'A-',

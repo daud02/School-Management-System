@@ -10,7 +10,7 @@ class StudentAuthSeeder extends Seeder
 {
     public function run(): void
     {
-        StudentAuth::updateOrInsert(
+        StudentAuth::firstOrCreate(
             // 🔑 Fields to check for existing record
             ['student_id' => '1'],
             // 🆕 Data to insert if not exists

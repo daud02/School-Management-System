@@ -21,6 +21,7 @@ class Mark extends Model
      */
     protected $fillable = [
         'student_id',
+        'student_name',
         'class',
         'subject',
         'marks',
@@ -36,4 +37,8 @@ class Mark extends Model
         'marks' => 'integer',
         'date' => 'date',
     ];
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'student_id');
+    }
 }

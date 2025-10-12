@@ -9,17 +9,17 @@ class SubjectsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        Subject::firstOrCreate(
+        Subject::updateOrInsert(
             ['code' => 'MATH'],
             ['name' => 'Mathematics', 'class' => '10']
         );
 
-        Subject::firstOrCreate(
+        Subject::updateOrInsert(
             ['code' => 'PHY'],
             ['name' => 'Physics', 'class' => '10']
         );
 
-        Subject::firstOrCreate(
+        Subject::updateOrInsert(
             ['code' => 'CHEM'],
             ['name' => 'Chemistry', 'class' => '10']
         );
