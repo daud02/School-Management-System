@@ -93,12 +93,12 @@
                         <label for="classFilter">Filter by Class</label>
                         <select class="form-control" id="classFilter">
                             <option value="">All Classes</option>
-                            <option value="Class 6A">Class 6A</option>
-                            <option value="Class 6B">Class 6B</option>
-                            <option value="Class 7A">Class 7A</option>
-                            <option value="Class 7B">Class 7B</option>
-                            <option value="Class 8A">Class 8A</option>
-                            <option value="Class 8B">Class 8B</option>
+                            <option value="6A">Class 6A</option>
+                            <option value="6B">Class 6B</option>
+                            <option value="7A">Class 7A</option>
+                            <option value="7B">Class 7B</option>
+                            <option value="8A">Class 8A</option>
+                            <option value="8B">Class 8B</option>
                         </select>
                     </div>
                 </div>
