@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StudentAuth;
+use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 
 class StudentAuthController extends Controller
@@ -42,15 +43,27 @@ class StudentAuthController extends Controller
         }
         // ✅ Check if student exists and password is correct
         if ($student && Hash::check($request->password, $student->password)) {
-            // Store student info in session
-            $request->session()->put('student', [
-                'id'         => $student->id,
-                'student_id' => $student->student_id,
-                'email'      => $student->email,
-            ]);
-
-            // 🔹 Redirect to dashboard with student_id in the URL
-            return redirect()->route('student.dashboard')->with('success', 'Login successful!');
+            // Fetch complete student details from students table
+            $studentDetails = Student::where('student_id', $student->student_id)->first();
+            
+            if ($studentDetails) {
+                // Store complete student info in session
+                $request->session()->put('student', [
+                    'id'            => $student->id,
+                    'student_id'    => $studentDetails->student_id,
+                    'name'          => $studentDetails->name,
+                    'email'         => $studentDetails->email,
+                    'class'         => $studentDetails->class,
+                    'gender'        => $studentDetails->gender,
+                    'date_of_birth' => $studentDetails->date_of_birth,
+                    'phone'         => $studentDetails->phone,
+                    'address'       => $studentDetails->address,
+                ]);
+                // 🔹 Redirect to dashboard with student_id in the URL
+                return redirect()->route('student.dashboard')->with('success', 'Login successful!');
+            }
+            
+            return back()->withErrors(['email' => 'Student details not found']);
         }
 
         // ❌ If credentials are wrong
