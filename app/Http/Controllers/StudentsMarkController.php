@@ -12,8 +12,8 @@ class StudentsMarkController extends Controller
      */
     public function index()
     {
-        $student_id = session('student.id'); // or session('student.student_id')
-
+        $student_id = session('student.student_id');
+        //dd($student_id);
         // Fetch marks directly from marks table
         $marks = Mark::where('student_id', $student_id)
                      ->get()

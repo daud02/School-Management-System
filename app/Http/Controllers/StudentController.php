@@ -40,6 +40,7 @@ class StudentController extends Controller
     ];
 
     // Fetch marks dynamically from database
+    //dd($studentId);
     $marks = DB::table('marks')
     ->where('student_id', $studentId) // filter by student
     ->select('subject', 'marks as marks', 'created_at as date') // select columns directly

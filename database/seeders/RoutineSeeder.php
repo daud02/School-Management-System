@@ -9,40 +9,48 @@ class RoutineSeeder extends Seeder
 {
     public function run(): void
     {
-        $class = '10';
+        $classes = ['6A', '6B', '6C'];
 
-        // Example subjects, instructors, and rooms for demonstration
+        // Routine grid (4 rows × 5 columns) for each class
+        // Row = period blocks (e.g. Morning, Midday, Afternoon)
+        // Col = weekdays (Monday–Friday)
         $subjects = [
-            ['Math', 'Physics', 'Chemistry', 'English', 'Programming'],
-            ['Data Structures', 'Electronics', 'Digital Logic', 'Statistics', 'Algorithms'],
-            ['Discrete Math', 'Operating System', 'Database', 'Networking', 'Software Eng'],
-            ['Break', 'Physics Lab', 'Chemistry Lab', 'Programming Lab', 'Project Work'],
+            ['Bangla', 'English', 'Mathematics', 'General Science', 'ICT'],
+            ['Religion', 'Bangladesh & Global Studies', 'Mathematics', 'English', 'Arts & Crafts'],
+            ['Bangla', 'General Science', 'Mathematics', 'Physical Education', 'Music'],
+            ['Break', 'Study Period', 'ICT Lab', 'Drawing', 'Assembly'],
         ];
 
         $instructors = [
-            ['Dr. Rahman', 'Prof. Karim', 'Dr. Alam', 'Mr. Hossain', 'Mr. Hasan'],
-            ['Dr. Kabir', 'Dr. Haque', 'Prof. Islam', 'Dr. Amin', 'Mr. Rafiq'],
-            ['Prof. Sultana', 'Dr. Rahim', 'Dr. Munna', 'Mr. Rashed', 'Prof. Tanvir'],
-            ['-', 'Dr. Karim', 'Dr. Alam', 'Mr. Hasan', 'Dr. Kabir'],
+            ['Mr. Rahman', 'Mrs. Karim', 'Mr. Alam', 'Mrs. Hossain', 'Mr. Hasan'],
+            ['Mr. Kabir', 'Mrs. Jahan', 'Mr. Islam', 'Mr. Amin', 'Mrs. Rafiq'],
+            ['Mrs. Sultana', 'Mr. Rahim', 'Mr. Munna', 'Mr. Rashed', 'Mrs. Tanvir'],
+            ['-', 'Mr. Karim', 'Mr. Alam', 'Mrs. Hasan', 'Mrs. Kabir'],
         ];
 
         $rooms = [
-            ['201', '202', '203', '204', '205'],
-            ['301', '302', '303', '304', '305'],
-            ['401', '402', '403', '404', '405'],
-            ['-', 'Lab 1', 'Lab 2', 'Lab 3', 'Lab 4'],
+            ['101', '102', '103', '104', '105'],
+            ['106', '107', '108', '109', '110'],
+            ['111', '112', '113', '114', '115'],
+            ['-', 'Room-A', 'Lab-1', 'Art-Room', 'Auditorium'],
         ];
 
-        for ($row = 0; $row < 4; $row++) {
-            for ($col = 0; $col < 5; $col++) {
-                Routine::updateOrInsert(
-                    ['class' => $class, 'row' => $row, 'col' => $col],
-                    [
-                        'subject' => $subjects[$row][$col],
-                        'instructor' => $instructors[$row][$col],
-                        'room' => $rooms[$row][$col],
-                    ]
-                );
+        foreach ($classes as $class) {
+            for ($row = 0; $row < 4; $row++) {
+                for ($col = 0; $col < 5; $col++) {
+                    Routine::updateOrInsert(
+                        [
+                            'class' => $class,
+                            'row' => $row,
+                            'col' => $col,
+                        ],
+                        [
+                            'subject' => $subjects[$row][$col],
+                            'instructor' => $instructors[$row][$col],
+                            'room' => $rooms[$row][$col],
+                        ]
+                    );
+                }
             }
         }
     }

@@ -369,17 +369,21 @@
                                 </div>
                                 <div class="modal-body">
                                     <form>
+                                        @php
+                                            $student = session('student');
+                                        @endphp
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Student ID</label>
-                                                    <input class="form-control" type="text" value="STU001" readonly>
+                                                    <input class="form-control" type="text" value="{{ $student['student_id'] ?? 'N/A' }}" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="fw-bold">Roll Number</label>
-                                                    <input class="form-control" type="text" value="101" readonly>
+                                                    <label class="fw-bold">Class</label>
+                                                    <input class="form-control" type="text" value="{{ $student['class'] ?? 'N/A' }}"
+                                                        readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -387,7 +391,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Full Name</label>
-                                                    <input class="form-control" type="text" value="Md. Abdul Karim"
+                                                    <input class="form-control" type="text" value="{{ $student['name'] ?? 'N/A' }}"
                                                         readonly>
                                                 </div>
                                             </div>
@@ -397,45 +401,29 @@
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Email</label>
                                                     <input class="form-control" type="email"
-                                                        value="karim@school.edu.bd" readonly>
+                                                        value="{{ $student['email'] ?? 'N/A' }}" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Phone Number</label>
-                                                    <input class="form-control" type="text" value="+880 1712-345678"
+                                                    <input class="form-control" type="text" value="{{ $student['phone'] ?? 'N/A' }}"
                                                         readonly>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="fw-bold">Class</label>
-                                                    <input class="form-control" type="text" value="Class 8A"
-                                                        readonly>
-                                                </div>
-                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Gender</label>
-                                                    <input class="form-control" type="text" value="Male" readonly>
+                                                    <input class="form-control" type="text" value="{{ $student['gender'] ?? 'N/A' }}" readonly>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Date of Birth</label>
                                                     <input class="form-control" type="text"
-                                                        value="15 January 2010" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="fw-bold">Blood Group</label>
-                                                    <input class="form-control" type="text" value="A+"
-                                                        readonly>
+                                                        value="{{ isset($student['date_of_birth']) ? date('d F Y', strtotime($student['date_of_birth'])) : 'N/A' }}" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -443,23 +431,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group mb-3">
                                                     <label class="fw-bold">Address</label>
-                                                    <textarea class="form-control" rows="2" readonly>123 Main Road, Dhaka-1205, Bangladesh</textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="fw-bold">Guardian Name</label>
-                                                    <input class="form-control" type="text" value="Md. Rahman"
-                                                        readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="fw-bold">Guardian Phone</label>
-                                                    <input class="form-control" type="text"
-                                                        value="+880 1912-345678" readonly>
+                                                    <textarea class="form-control" rows="2" readonly>{{ $student['address'] ?? 'N/A' }}</textarea>
                                                 </div>
                                             </div>
                                         </div>

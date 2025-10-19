@@ -10,14 +10,38 @@ class StudentAuthSeeder extends Seeder
 {
     public function run(): void
     {
-        StudentAuth::firstOrCreate(
-            // 🔑 Fields to check for existing record
-            ['student_id' => '1'],
-            // 🆕 Data to insert if not exists
-            [
-                'email'    => 'john@example.com',
-                'password' => Hash::make("daud"), // hashed password
-            ]
-        );
+        $classes = ['6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C'];
+
+        $maleNames = [
+            'Arif Rahman', 'Tuhin Hasan', 'Rafiul Alam', 'Imran Hossain', 'Rahat Karim',
+            'Farhan Alam', 'Nazmul Hasan', 'Nabil Chowdhury', 'Mehedi Islam', 'Rakibul Islam'
+        ];
+
+        $femaleNames = [
+            'Mitu Akter', 'Shorna Khatun', 'Lamia Sultana', 'Afsana Nahar', 'Sadia Rahman',
+            'Samiha Yasmin', 'Riyana Sultana', 'Zarin Jahan', 'Ayesha Noor', 'Tania Khatun'
+        ];
+
+        $studentId = 1;
+
+        foreach ($classes as $class) {
+            for ($i = 0; $i < 10; $i++) {
+                $isMale = ($i % 2 == 0);
+                $name = $isMale ? $maleNames[$i] : $femaleNames[$i];
+
+                // must match student seeder email
+                $email = strtolower(str_replace(' ', '', $name)) . strtolower($class) . '@example.com';
+
+                StudentAuth::updateOrInsert(
+                    ['student_id' => $studentId],
+                    [
+                        'email' => $email,
+                        'password' => Hash::make("daud"),
+                    ]
+                );
+
+                $studentId++;
+            }
+        }
     }
 }

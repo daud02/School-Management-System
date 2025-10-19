@@ -10,50 +10,57 @@ class MarksTableSeeder extends Seeder
 {
     public function run(): void
     {
-        // Student 1
-        Mark::updateOrInsert(
-            ['student_id' => '1', 'subject' => 'Mathematics', 'exam_type' => 'Midterm'],
-            [
-                'student_name' => 'John Doe',
-                'class' => '10',
-                'marks' => 85,
-                'grade' => 'A+',
-                'date' => Carbon::parse('2025-09-01'),
-            ]
-        );
+        $classes = ['6A', '6B', '6C'];
+        $maleNames = [
+            'Arif Rahman', 'Tuhin Hasan', 'Rafiul Alam', 'Imran Hossain', 'Rahat Karim',
+            'Farhan Alam', 'Nazmul Hasan', 'Nabil Chowdhury', 'Mehedi Islam', 'Rakibul Islam'
+        ];
+        $femaleNames = [
+            'Mitu Akter', 'Shorna Khatun', 'Lamia Sultana', 'Afsana Nahar', 'Sadia Rahman',
+            'Samiha Yasmin', 'Riyana Sultana', 'Zarin Jahan', 'Ayesha Noor', 'Tania Khatun'
+        ];
 
-        Mark::updateOrInsert(
-            ['student_id' => '1', 'subject' => 'Physics', 'exam_type' => 'Midterm'],
-            [
-                'student_name' => 'John Doe',
-                'class' => '10',
-                'marks' => 78,
-                'grade' => 'A',
-                'date' => Carbon::parse('2025-09-02'),
-            ]
-        );
+        $subjects = ['Bangla', 'English', 'Mathematics'];
+        $examType = 'Midterm';
+        $baseDate = Carbon::parse('2025-09-01');
+        $studentId = 1;
 
-        // Student 2
-        Mark::firstOrCreate(
-            ['student_id' => '2', 'subject' => 'Mathematics', 'exam_type' => 'Midterm'],
-            [
-                'student_name' => 'Jane Smith',
-                'class' => '10',
-                'marks' => 92,
-                'grade' => 'A+',
-                'date' => Carbon::parse('2025-09-01'),
-            ]
-        );
+        foreach ($classes as $classIndex => $class) {
+            for ($i = 0; $i < 10; $i++) {
+                $isMale = $i % 2 === 0;
+                $name = $isMale ? $maleNames[$i] : $femaleNames[$i];
 
-        Mark::firstOrCreate(
-            ['student_id' => '2', 'subject' => 'Physics', 'exam_type' => 'Midterm'],
-            [
-                'student_name' => 'Jane Smith',
-                'class' => '10',
-                'marks' => 68,
-                'grade' => 'A-',
-                'date' => Carbon::parse('2025-09-02'),
-            ]
-        );
+                foreach ($subjects as $sIndex => $subject) {
+                    // Calculated marks and grade (deterministic)
+                    $marks = 60 + (($classIndex * 3 + $i + $sIndex) % 25); // 60–84 range
+                    $grade = $this->gradeFromMarks($marks);
+                    $date = $baseDate->copy()->addDays($sIndex);
+
+                    Mark::updateOrInsert(
+                        ['student_id' => $studentId, 'subject' => $subject, 'exam_type' => $examType],
+                        [
+                            'student_name' => $name,
+                            'class' => $class,
+                            'marks' => $marks,
+                            'grade' => $grade,
+                            'date' => $date,
+                        ]
+                    );
+                }
+
+                $studentId++;
+            }
+        }
+    }
+
+    private function gradeFromMarks($marks)
+    {
+        if ($marks >= 80) return 'A+';
+        if ($marks >= 70) return 'A';
+        if ($marks >= 60) return 'A-';
+        if ($marks >= 50) return 'B';
+        if ($marks >= 40) return 'C';
+        if ($marks >= 33) return 'D';
+        return 'F';
     }
 }
