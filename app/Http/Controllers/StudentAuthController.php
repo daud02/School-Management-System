@@ -40,7 +40,6 @@ class StudentAuthController extends Controller
             //     'password_check'   => Hash::check($request->password, $student->password),
             // ]);
         }
-        // ✅ Check if student exists and password is correct
         if ($student && Hash::check($request->password, $student->password)) {
             // Store student info in session
             $request->session()->put('student', [
